@@ -49,36 +49,32 @@ public class Scanner
 			if (!stop)
 				stop = this.find_element_in_contents(6_char_keywords, 6);
 			if (!stop)
+			{
 				stop = this.find_element_in_contents(7_char_keywords, 7);
+				if (tokens.end().equals("program"))
+				{ //get identifier of program name
+					index = contents.indexOf("(");
+					tokens.add(contents.substring(0, index)); //add identifier
+					tokens.add(contents.substring(index, index+1); //add (
+					contents = contents.substring(index+1); //after the (
+				}				
+			}
 			if (!stop)
+			{
 				stop = this.find_element_in_contents(8_char_keywords, 8);
+				if (stop)
+				{ //get the identifier for the function name
+					index = contents.indexOf("(");
+					tokens.add(contents.substring(0, index)); //add identifier
+					tokens.add(contents.substring(index, index+1); //add (
+					contents = contents.substring(index+1); //after the (
+				}
+			}
 			if (!stop) //no keywords found, must be an identifier
 				//how do we get the identifiers between the tokens?...
 			else
 				contents = contents.trim(); //remove whitespace
 		}
-		
-		// //search pieces for tokens not separated by spaces
-		// for (int i = 0; i < pieces.size(); i++)
-		// {
-			// //search for keywords:
-			// //program var function integer real begin end if then else while do print 
-			// //return := = != < <= > >= + - * / { } ; . , : ( )
-			// for (String keyword : keywords)
-			// {
-				// if (piece.indexOf(keyword) != -1)
-				// {
-					// //rewrite piece in pieces
-					// pieces[i] = piece.substring(0, piece.indexOf(keyword));
-					// 
-					// //create new piece at the end that is the remainder
-					// pieces[pieces.size()] = piece.substring(piece.indexOf(keyword));
-					// 
-				// }
-			// }
-		// }
-		
-		
 	}
 	
 	private Boolean find_element_in_contents(ArrayList<String> list, int characters)
