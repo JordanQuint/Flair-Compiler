@@ -14,9 +14,15 @@ public class Compiler {
    * @param args the command line arguments
    */
   public static void main(String[] args) {
-    //validate that args[0] exists and is a filename
+  	
+  	//validate that args[0] exists and is a filename
+  	if (!((new File(args[0])).exists()))
+  	{
+  		System.out.println("You must supply a valid filename.");
+  		System.exit(1);
+  	}
     
-    //Scanner scanner = new Scanner(args[0])
+    Scanner scanner = new Scanner(args[0]);
     
     
     //Parser
