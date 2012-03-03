@@ -1,0 +1,7 @@
+program adding(a:real, b:integer);
+var one : integer; two:real; sum:real;
+begin
+    sum:=0;
+    sum:=one + two;
+    print(sum)
+end.

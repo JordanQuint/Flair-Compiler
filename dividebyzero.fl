@@ -1,0 +1,8 @@
+program dividebyzero( c : integer );
+function dbz( n : integer) : real
+    begin
+        return n / 0.0
+    end;
+begin
+    print( dbz(c) )
+end.

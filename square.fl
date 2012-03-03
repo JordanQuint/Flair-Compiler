@@ -1,0 +1,13 @@
+program square();
+var first : integer;
+    second : integer;
+function squared(a:integer) : integer
+    begin
+        return a * a
+    end
+begin
+    first := 4;
+    second := 4 * first;
+    print(squared(first))
+    print(squared(second))
+end.
