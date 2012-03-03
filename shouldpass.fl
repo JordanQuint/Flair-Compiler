@@ -1,0 +1,5 @@
+program shouldpass(n: probably);
+var yo : real;
+begin
+    return 5
+end.

@@ -1,0 +1,6 @@
+program simple(a:real, b:integer);
+var one : integer;
+function two(): integer
+begin
+    return 3
+end.

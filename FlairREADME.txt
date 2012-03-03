@@ -12,9 +12,16 @@ Design:
 
     The FlairToken class is set up to create the tokens. The token is constructed to have a type and a value. Static variables are there to have the possible token type variables known.
 
+Parser
+------
+    Our parser is a table parser. It uses the table to detect errors, and determine if the file is syntactically correct.
+    
+    The FlairParser class contains the table and the processes that determine if a file is correct. The table is a 2d array
+with the values in the cells being string arrays.
+
+
 Instructions:
 
-Need the FlairScanner java file and FlairToken java file.
+Need the FlairParser java file, FlairScanner java file, and FlairToken java file.
 Any Flair files you want to use should be in the same folder as those classes.
-Compile both java files and run the FlairScanner class with a command line argument that is the name of the file and extension.
-*You need Java JDK 7 for the code to work.
+Compile those java files and run the FlairParser class with a command line argument that is the name of the file and extension.

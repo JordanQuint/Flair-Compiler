@@ -1,5 +1,5 @@
 /*
-  Compiler Project: Scanner Assignment 02/09/12
+  Compiler Project: Scanner Assignment 02/23/12
   Authors: Andrew, Jordan, and Zane
   FlairScanner class
 */
@@ -10,63 +10,54 @@ import java.io.*;
 public class FlairScanner
 {
     private String[] candidates;
-	 
-    public static void main( String[] args )
-    {
-	     FlairScanner hello = new FlairScanner(args[0]);
-		  ArrayList<FlairToken> test3;
-		  
-		  try{
-		      test3 = hello.tokenize();
-				
-		      //display tokens on different lines
-		      for(int i=0; i<test3.size(); i++){
-		          //include semantic content for identifier
-		          if(test3.get(i).getType().equals(FlairToken.Identifier)){
-				        System.out.println(test3.get(i).getType() + " " + test3.get(i).getValue());}
-				
-				    //include semantic content for numbers
-				    else if(test3.get(i).getType().equals(FlairToken.RealNumber) | (test3.get(i).getType().equals(FlairToken.IntegerNumber))){
-				        System.out.println(test3.get(i).getType() + " " + test3.get(i).getValue());}
-				
-				    //no value so just print type
-				    else{
-				        System.out.println(test3.get(i).getType());}}}
-		  
-		  catch(IOException e){
-		      System.out.println("Syntax Error");}		  
-    }
+	 private ArrayList<FlairToken> tokens;
 	 
 	 public FlairScanner(String origFile)
 	 {
 	     File originalFile = new File(origFile);
 	     this.flairFileToStrings(originalFile);
+		  try{
+		      this.tokenize();
+		  }
+		  catch(IOException e){
+		      System.out.println("Syntax Error");
+		  }
 	 }
 	 
     public void flairFileToStrings(File pathname)
     {
-		  try
-		  {
+		  try{
 		  Scanner in = new Scanner(pathname);
 		  String fileString = "";
 		  while(in.hasNextLine()){
 		      fileString = fileString.concat(in.nextLine());
-				fileString = fileString + " ";}
+				fileString = fileString + " ";
+		  }
 		  in.close();	  
 		  fileString = fileString.replaceAll("[\n\r\t]", " ");
 		  String[] delimiters = {":", "=", "!", "<", ">", "\\+", "-", "\\*", "/", "\\{", "}", ";", "\\.", ",", ":", "\\(", "\\)"};
 		  for(int i=0; i<delimiters.length; i++){
-		      fileString = fileString.replaceAll("" + delimiters[i] + "", " " + delimiters[i] + " ");}
-		  candidates = fileString.split("\\s+");}
+		      fileString = fileString.replaceAll("" + delimiters[i] + "", " " + delimiters[i] + " ");
+		  }
+		  candidates = fileString.split("\\s+");
+		  }
 		  
 		  catch(IOException e){
-		      System.out.println("Syntax Error");}
+		      System.out.println("Syntax Error");
+		  }
     }
 	 
-	 public ArrayList<FlairToken> tokenize() throws IOException
+	 /*
+	 ** Creates the tokens
+	 **
+	 **   Under revision to handle the negative identifer vs negative number issue
+	 **
+	 **
+	 */
+	 public void tokenize() throws IOException
 	 {
 	     //Sequence of successful tokens
-	     ArrayList<FlairToken> tokens = new ArrayList<FlairToken>();
+	     tokens = new ArrayList<FlairToken>();
 		  
 		  for(int token = 0; token<candidates.length; token++){
 		      //is it a number
@@ -78,11 +69,16 @@ public class FlairScanner
 						      if(candidates[token].matches("(0|[1-9][0-9]*)e(0|[1-9][0-9]*)")){
 								    String[] splitUp = candidates[token].split("e");
 									 if((Long.parseLong(splitUp[0]) < new Long("4294967296")) && (Long.parseLong(splitUp[1]) < new Long("4294967296"))){
-								        tokens.add(new FlairToken(FlairToken.RealNumber, candidates[token]));}
+								        tokens.add(new FlairToken(FlairToken.RealNumber, candidates[token]));
+								    }
 									 else{
-									     throw new IOException("Wrong format for number");}}
+									     throw new IOException("Wrong format for number");
+									 }
+							   }
 								else{
-								    throw new IOException("Wrong format for number");}}
+								    throw new IOException("Wrong format for number");
+								}
+						  }
 						  
 						  //number containing a decimal and possibly and e
 						  else if(candidates[token+1].equals(".")){
@@ -92,107 +88,129 @@ public class FlairScanner
 									     if(candidates[token+2].contains("e")){
 										      if((Long.parseLong(candidates[token+2].substring(candidates[token+2].indexOf("e")+1))) < new Long("4294967296")){
 												    tokens.add(new FlairToken(FlairToken.RealNumber, candidates[token] + "." + candidates[token+2]));
-									             token = token + 2;}
+									             token = token + 2;
+											   }
 												else{
-												    throw new IOException("Wrong format for number");}}
-										  
+												    throw new IOException("Wrong format for number");
+											   }
+										  }
 										  //no exponent in later part
 										  else if((Long.parseLong(candidates[token+2]) < new Long("4294967296"))){
 										      tokens.add(new FlairToken(FlairToken.RealNumber, candidates[token] + "." + candidates[token+2]));
-												token = token + 2;}
-										  
+												token = token + 2;
+										  }
 										  else{
-												throw new IOException("Wrong format for number");}}
+												throw new IOException("Wrong format for number");
+										  }
+								    }
 								    else{
-									     throw new IOException("Wrong format for number");}}
+									     throw new IOException("Wrong format for number");
+									 }
+								}
 								else{
-								    throw new IOException("Wrong format for number");}}
-									 
+								    throw new IOException("Wrong format for number");
+								}
+						  }
+								 
 						  else{
-						      throw new IOException("Wrong format for number");}}
+						      throw new IOException("Wrong format for number");
+						  }
+					 }
 					 
 					 //integer
 					 else{
 					     if(candidates[token].matches("0|[1-9][0-9]*")){
 				            if(Long.parseLong(candidates[token]) < new Long("4294967296")){
-					             tokens.add(new FlairToken(FlairToken.IntegerNumber, candidates[token]));}
+					             tokens.add(new FlairToken(FlairToken.IntegerNumber, candidates[token]));
+								}
 					         else{
-					             throw new IOException("Out of range");}}
+					             throw new IOException("Out of range");
+								}
+						  }
 				        else{
-				            throw new IOException("Wrong format for number");}}}
+				            throw new IOException("Wrong format for number");
+						  }
+					 }
+			   }
 				
 				//not a number
-				else{
-	             switch (candidates[token]){	  
-                case "program":
+				else{	  
+                if(candidates[token].equals("program")){
                     tokens.add(new FlairToken(FlairToken.Program));
-                    break;
-                case "var":
+                }
+                else if(candidates[token].equals("var")){
                     tokens.add(new FlairToken(FlairToken.Var));
-                    break;
-                case "function":
+                }
+                else if(candidates[token].equals("function")){
                     tokens.add(new FlairToken(FlairToken.Function));
-                    break;
-                case "integer":
+                }
+                else if(candidates[token].equals("integer")){
                     tokens.add(new FlairToken(FlairToken.Integer));
-                    break; 
-                case "real":
+                } 
+                else if(candidates[token].equals("real")){
                     tokens.add(new FlairToken(FlairToken.Real));
-                    break;
-                case "begin":
+                }
+                else if(candidates[token].equals("begin")){
                     tokens.add(new FlairToken(FlairToken.Begin));
-                    break;
-			       case "end":
+                }
+			       else if(candidates[token].equals("end")){
                     tokens.add(new FlairToken(FlairToken.End));
-                    break;
-			       case "if":
+                }
+			       else if(candidates[token].equals("if")){
                     tokens.add(new FlairToken(FlairToken.If));
-                    break;
-			       case "then":
+                }
+			       else if(candidates[token].equals("then")){
                     tokens.add(new FlairToken(FlairToken.Then));
-                    break;
-			       case "else":
+                }
+			       else if(candidates[token].equals("else")){
                     tokens.add(new FlairToken(FlairToken.Else));
-                    break;
-			       case "while":
+                }
+			       else if(candidates[token].equals("while")){
                     tokens.add(new FlairToken(FlairToken.While));
-                    break;
-			       case "do":
+                }
+			       else if(candidates[token].equals("do")){
                     tokens.add(new FlairToken(FlairToken.Do));
-                    break;
-			       case "print":
+                }
+			       else if(candidates[token].equals("print")){
                     tokens.add(new FlairToken(FlairToken.Print));
-                    break;
-			       case "return":
+                }
+			       else if(candidates[token].equals("return")){
                     tokens.add(new FlairToken(FlairToken.Return));
-                    break;
-			       case ":":
+                }
+			       else if(candidates[token].equals(":")){
 					     if(candidates[token+1].equals("=")){
 				            tokens.add(new FlairToken(FlairToken.Assignment));
-				      	   token++;}
+				      	   token++;
+						  }
 				        else{
-				            tokens.add(new FlairToken(FlairToken.Colon));}
-                    break;
-			       case "=":
+				            tokens.add(new FlairToken(FlairToken.Colon));
+						  }
+                }
+			       else if(candidates[token].equals("=")){
                     tokens.add(new FlairToken(FlairToken.Equals));
-                    break;
-			       case "!":
+                }
+			       else if(candidates[token].equals("!")){
 			           if(candidates[token+1].equals("=")){
                         tokens.add(new FlairToken(FlairToken.NotEquals));
-						      token++;}
+						      token++;
+						  }
 				        else{
-				            throw new IOException("Wrong format");}
-                    break;
-		          case "<":
+				            throw new IOException("Wrong format");
+						  }
+                }
+		          else if(candidates[token].equals("<")){
                     if(candidates[token].length() == 1){
-                        tokens.add(new FlairToken(FlairToken.LessThan));}
+                        tokens.add(new FlairToken(FlairToken.LessThan));
+						  }
 				        else if(candidates[token+1].equals("=")){
 				            tokens.add(new FlairToken(FlairToken.LessThanEqual));
-						      token++;}
+						      token++;
+						  }
 				        else{
-				            throw new IOException("Wrong format");}
-                    break;
-			       case ">":
+				            throw new IOException("Wrong format");
+						  }
+                }
+			       else if(candidates[token].equals(">")){
                     if(candidates[token].length() == 1){
                         tokens.add(new FlairToken(FlairToken.GreaterThan));}
 				        else if(candidates[token+1].equals("=")){
@@ -200,64 +218,79 @@ public class FlairScanner
 						      token++;}
 				        else{
 				            throw new IOException("Wrong format");}
-                    break;
-			       case "+":
+                }
+			       else if(candidates[token].equals("+")){
                     tokens.add(new FlairToken(FlairToken.Plus));
-                    break;
-			       case "-":
+                }
+			       else if(candidates[token].equals("-")){
                    tokens.add(new FlairToken(FlairToken.Minus));
-                   break;
-			       case "*":
+                }
+			       else if(candidates[token].equals("*")){
                    tokens.add(new FlairToken(FlairToken.Multiply));
-                   break;
-			       case "/":
+                }
+			       else if(candidates[token].equals("/")){
                    tokens.add(new FlairToken(FlairToken.Divide));
-                   break;
-			       case "{":
-                   tokens.add(new FlairToken(FlairToken.LeftBrace));
-						 //Deals with getting rid of the comments that we're not supposed to consider
+                }
+			       else if(candidates[token].equals("{")){
 						 for(int i = token + 1;  i<candidates.length; i++){
 						     if(candidates[i].equals("}")){
-							      tokens.add(new FlairToken(FlairToken.RightBrace));
 									token = i; 
-									i = i + 100000;}
-							  else if(i == candidates.length -1){
-							      throw new IOException("Wrong format");}
+									i = candidates.length;}
+							  else if(i == candidates.length - 1){
+							      throw new IOException("Comment doesn't close");}
 						 }
-                   break;
-			       case "}":
-                   tokens.add(new FlairToken(FlairToken.RightBrace));
-                   break;
-			       case ";":
+                }
+			       else if(candidates[token].equals(";")){
                    tokens.add(new FlairToken(FlairToken.SemiColon));
-                   break;
-			       case ".":
+                }
+			       else if(candidates[token].equals(".")){
                    tokens.add(new FlairToken(FlairToken.Period));
-                   break;
-			       case ",":
+                }
+			       else if(candidates[token].equals(",")){
                    tokens.add(new FlairToken(FlairToken.Comma));
-                   break;
-			       case "(":
+                }
+			       else if(candidates[token].equals("(")){
                    tokens.add(new FlairToken(FlairToken.LeftParentheses));
-                   break;
-			       case ")":
+                }
+			       else if(candidates[token].equals(")")){
                    tokens.add(new FlairToken(FlairToken.RightParentheses));
-                   break;
-                default:
-                   tokens.add(identifierCheck(candidates[token]));}}}
-						 
-		  return tokens;
-	 }
+                }
+                else{
+                   tokens.add(identifierCheck(candidates[token]));
+					 }
+				}//end of else
+	     }//end of for		 
+    }
 	 	 
 	 //Checks to see if the string fits the format of an identifier
 	 public FlairToken identifierCheck(String theWord) throws IOException
 	 {
 	     if(theWord.length() < 257){
-		      if(theWord.matches("[a-zA-Z]+")){
-		          return new FlairToken(FlairToken.Identifier, theWord);}
+		      if(theWord.matches("([a-zA-Z]|[0-9])+")){
+		          return new FlairToken(FlairToken.Identifier, theWord);
+				}
 				else{
-				    throw new IOException("Wrong format for identifier");}}
+				    throw new IOException("Wrong format for identifier");
+				}
+		  }
 		  else{
-		      throw new IOException("Wrong format for identifier");}
+		      throw new IOException("Wrong format for identifier");
+		  }
+	 }
+	 
+	 protected FlairToken getToken(){
+	     return tokens.get(0);
+	 }
+	 
+	 protected FlairToken peek(){
+	     return tokens.get(1);
+	 }
+	 
+	 protected void deleteToken(){
+	     tokens.remove(0);
+	 }
+	 
+	 protected void addToken(FlairToken newToken){
+	     tokens.add(newToken);
 	 }
 }

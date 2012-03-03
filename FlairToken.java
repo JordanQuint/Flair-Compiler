@@ -1,28 +1,28 @@
 /*
-  Compiler Project: Scanner Assignment 02/09/12
+  Compiler Project: Scanner Assignment 02/23/12
   Authors: Andrew, Jordan, and Zane
   FlairToken class
 */
 
 public class FlairToken
 {
-    public static final String Program = "PROGRAM";
-    public static final String Var = "VAR";
-    public static final String Function = "FUNCTION";
-    public static final String Integer = "INTEGER";
-    public static final String Real = "REAL";
-	 public static final String IntegerNumber = "INTEGERNUMBER";
-    public static final String RealNumber = "REALNUMBER"; 
-    public static final String Begin = "BEGIN";
-    public static final String End = "END";
-    public static final String If = "IF";
-    public static final String Then = "THEN";
-    public static final String Else = "ELSE";
-	 public static final String While = "WHILE";
-	 public static final String Do = "DO";
-	 public static final String Print = "PRINT";
-	 public static final String Return = "RETURN";
-	 public static final String Identifier = "IDENTIFIER";
+    public static final String Program = "program";
+    public static final String Var = "var";
+    public static final String Function = "function";
+    public static final String Integer = "integer";
+    public static final String Real = "real";
+	 public static final String IntegerNumber = "integerNum";
+    public static final String RealNumber = "realNum"; 
+    public static final String Begin = "begin";
+    public static final String End = "end";
+    public static final String If = "if";
+    public static final String Then = "then";
+    public static final String Else = "else";
+	 public static final String While = "while";
+	 public static final String Do = "do";
+	 public static final String Print = "print";
+	 public static final String Return = "return";
+	 public static final String Identifier = "identifier";
 	 public static final String Assignment = ":=";
 	 public static final String Equals = "=";
 	 public static final String NotEquals = "!=";
@@ -42,6 +42,7 @@ public class FlairToken
 	 public static final String Colon = ":";
 	 public static final String LeftParentheses = "(";
 	 public static final String RightParentheses = ")";
+	 public static final String EOS = "$";
 
     private String type;
     private Object value;
