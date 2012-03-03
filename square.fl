@@ -6,10 +6,10 @@ var first : integer;
 function squared(a:integer) : integer
     begin
         return a * a * third * first
-    end
+    end;
 begin
     first := 2 + 2;
     second := 4 * fourth;
-    print(squared(first))
+    print(squared(first));
     print(squared(squared(second)))
 end.

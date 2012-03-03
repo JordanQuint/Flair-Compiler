@@ -45,22 +45,14 @@ public class FlairParser{
 		  parseStack.push("PROGRAM");
 		  
 		  while(!parseStack.peek().equals("$")){
-		      
 				//
 				//For testing to see the stack vs token
-		      //System.out.println("stack = " + parseStack.peek() + "   token = " + currentToken.getType());
+		      System.out.println("stack = " + parseStack.peek() + "   token = " + currentToken.getType());
 				//
 				
 		      if(tokenList.contains(parseStack.peek())){
 				    if(parseStack.peek().equals(currentToken.getType())){
 					     parseStack.pop();
-						  if(currentToken.getType().equals("identifier") && parseStack.peek().equals("function")){
-						      System.out.println(currentToken.getValue());
-						  }
-						  
-						  else if(currentToken.getType().equals("identifier")){
-						      System.out.print(currentToken.getValue());
-						  }
 						  tokenStream.deleteToken();
 						  currentToken = tokenStream.getToken();
 					 }
@@ -72,7 +64,7 @@ public class FlairParser{
 				
 				else{
 				    String firstValue = parseTable[states.indexOf(parseStack.peek())+1][tokenList.indexOf(currentToken.getType())+1][0];
-					 //System.out.println(firstValue);
+					 System.out.println(firstValue + " " + currentToken.getValue());
 					 
 					 //test to see if allowed to be empty
 				    if(firstValue.equals("E")){
@@ -119,21 +111,20 @@ public class FlairParser{
 	 */
 	 private void createTable(){
 	     parseTable = new String[][][]{
-	       //List of the terminals
-		   {new String[] {"E"}, new String[] {"identifier"}, new String[] {"integerNum"}, new String[] {"realNum"}, new String[] {"program"}, new String[] {"var"},
+		      {new String[] {"E"}, new String[] {"identifier"}, new String[] {"integerNum"}, new String[] {"realNum"}, new String[] {"program"}, new String[] {"var"},
 				new String[] {"function"}, new String[] {"integer"}, new String[] {"real"}, new String[] {"begin"}, new String[] {"end"}, new String[] {"if"},
 				new String[] {"then"}, new String[] {"else"}, new String[] {"while"}, new String[] {"do"}, new String[] {"print"}, new String[] {"return"}, new String[] {":="}, new String[] {"="},
 				new String[] {"!="}, new String[] {"<"}, new String[] {"<="}, new String[] {">"}, new String[] {">="}, new String[] {"+"}, new String[] {"-"}, new String[] {"*"}, new String[] {"/"},
 				new String[] {"{"}, new String[] {"}"}, new String[] {";"}, new String[] {"."}, new String[] {","}, new String[] {":"}, new String[] {"("}, new String[] {")"}, new String[] {"$"}},
 				
-				{new String[] {"PROGRAM"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"program", "identifier", "make-identifier", "(", "PARAMETERS", ")", "make-parameters", ";", "DECS", "make-decs", "COMPS", "make-comps", "make-program"}, new String[] {"E"},
+				{new String[] {"PROGRAM"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"program", "identifier", "(", "PARAMETERS", ")", ";", "DECS", "COMPS"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
 				{new String[] {"DECS"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"VARDECS", "FUNCDECS"}, new String[] {"VARDECS", "FUNCDECS"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {""}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"VARDECS", "FUNCDECS"}},
@@ -156,7 +147,7 @@ public class FlairParser{
 		      new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 			   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 			  
-			   {new String[] {"VARDEC"}, new String[] {"identifier", "make-identifier", ":", "TYPE", ";", "make-vardec"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+			   {new String[] {"VARDEC"}, new String[] {"identifier", ":", "TYPE", ";"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 			   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 			   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 		      new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -180,13 +171,13 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"FUNCDEC"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"FUNCHEADING", "FUNCBODY", "make-func"}, new String[] {"E"},
+				{new String[] {"FUNCDEC"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"FUNCHEADING", "FUNCBODY", ";"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
-				{new String[] {"FUNCHEADING"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"function", "identifier", "make-identifier", "(", "PARAMETERS", ")", ":", "TYPE"}, new String[] {"E"},
+				{new String[] {"FUNCHEADING"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"function", "identifier", "(", "PARAMETERS", ")", ":", "TYPE"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -196,7 +187,7 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}, new String[] {""}},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
 				{new String[] {"PARAMLIST"}, new String[] {"PARAMETER", "PARAMLIST'"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -210,26 +201,26 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {",", "PARAMLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"PARAMETER"}, new String[] {"identifier", "make-identifier", ":", "type"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"PARAMETER"}, new String[] {"identifier", ":", "type"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
 				{new String[] {"FUNCBODY"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"VARDECS", "COMPS"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"E"}, new String[] {"VARDECS", "COMPS"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"VARDECS", "COMPS"}},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
-				{new String[] {"TYPE"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"integer", "make-integer-declare"},
-				new String[] {"real", "make-real-declare"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"TYPE"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"integer"},
+				new String[] {"real"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
 				{new String[] {"COMPS"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"begin", "STATLIST", "make-statement-list", "end"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"E"}, new String[] {"begin", "STATLIST", "end"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
@@ -243,16 +234,16 @@ public class FlairParser{
 				{new String[] {"STATLIST'"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {";", "STATLIST'"},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {";", "STATLIST"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"STATEMENT"}, new String[] {"ASSIGNSTAT", "make-statement"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"COMPS"}, new String[] {"E"}, new String[] {"IFSTAT", "make-statement"}, new String[] {"E"}, new String[] {"E"}, new String[] {"WHILESTAT", "make-statement"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"return", "EXPRESSION", "make-statement"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"STATEMENT"}, new String[] {"ASSIGNSTAT"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"E"}, new String[] {"COMPS"}, new String[] {"E"}, new String[] {"IFSTAT"}, new String[] {"E"}, new String[] {"E"}, new String[] {"WHILESTAT"}, new String[] {"E"},
+				new String[] {"FUNCCALL"}, new String[] {"return", "EXPRESSION"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"ASSIGNSTAT"}, new String[] {"identifier", "make-identifier", ":=", "EXPRESSION"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"ASSIGNSTAT"}, new String[] {"identifier", ":=", "EXPRESSION"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -282,11 +273,11 @@ public class FlairParser{
 				new String[] {">="}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
-				{new String[] {"EXPRESSION"}, new String[] {"TERM", "EXPRESSION'", "make-expression"}, new String[] {"TERM", "EXPRESSION'", "make-expression"}, new String[] {"TERM", "EXPRESSION'", "make-expression"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"EXPRESSION"}, new String[] {"TERM", "EXPRESSION'"}, new String[] {"TERM", "EXPRESSION'"}, new String[] {"TERM", "EXPRESSION'"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"-", "EXPRESSION", "make-expression"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"TERM", "EXPRESSION'", "make-expression"}, new String[] {"E"}, new String[] {"TERM", "EXPRESSION'", "make-expression"}},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"-", "EXPRESSION"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"TERM", "EXPRESSION'"}, new String[] {"E"}, new String[] {"TERM", "EXPRESSION'"}},
 				
 				{new String[] {"EXPRESSION'"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -306,7 +297,7 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"*", "TERM"}, new String[] {"/", "TERM"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"FACTOR"}, new String[] {"identifier", "make-identifier", "FACTOR'"}, new String[] {"LITERAL"}, new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"FACTOR"}, new String[] {"identifier", "FACTOR'"}, new String[] {"LITERAL"}, new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -316,15 +307,15 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"(", "ARGS", ")", "make-args"}, new String[] {"E"}, new String[] {""}},
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"(", "ARGS", ")"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"f"}, new String[] {"identifier", "make-identifier", "(", "ARGS", ")", "make-args"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"FUNCCALL"}, new String[] {"identifier", "(", "ARGS", ")"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				new String[] {"print", "(", "ARGS", ")"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 				
-        {new String[] {"ARGS"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"ARGS"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -342,7 +333,7 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {",", "ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
 				
-				{new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"integerNum", "make-integer"}, new String[] {"realNum", "make-real"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+				{new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"integerNum"}, new String[] {"realNum"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -352,7 +343,7 @@ public class FlairParser{
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"return"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
 				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}}
+				new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
 		  };
 	 }
 }
