@@ -35,10 +35,14 @@ public class FlairScanner
 		  }
 		  in.close();	  
 		  fileString = fileString.replaceAll("[\n\r\t]", " ");
-		  String[] delimiters = {":", "=", "!", "<", ">", "\\+", "-", "\\*", "/", "\\{", "}", ";", "\\.", ",", ":", "\\(", "\\)"};
+		  String[] delimiters = {":", "=", "!", "<", ">", "\\+", "\\*", "/", "\\{", "}", ";", "\\.", ",", ":", "\\(", "\\)"};
 		  for(int i=0; i<delimiters.length; i++){
 		      fileString = fileString.replaceAll("" + delimiters[i] + "", " " + delimiters[i] + " ");
 		  }
+		  //find negative values and fix
+		  fileString = fileString.replaceAll("-", " -");
+		  fileString = fileString.replaceAll("  ", " ");
+		 
 		  candidates = fileString.split("\\s+");
 		  }
 		  
@@ -222,6 +226,7 @@ public class FlairScanner
 			       else if(candidates[token].equals("+")){
                     tokens.add(new FlairToken(FlairToken.Plus));
                 }
+					 //insert negative number portion
 			       else if(candidates[token].equals("-")){
                    tokens.add(new FlairToken(FlairToken.Minus));
                 }
