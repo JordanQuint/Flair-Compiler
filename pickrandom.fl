@@ -1,0 +1,40 @@
+{Must pick the 5 numbers between 1-20 in the correct order}
+
+program pickRandom(a : integer, b : integer, c : integer, d : integer, e : integer);
+var first : integer;
+    second : integer;
+    third : integer;
+    fourth : integer;
+    fifth : integer;
+    count : integer;
+function compare() : integer
+    begin
+        count := 0;
+        first := 2;
+        second := 7;
+        third := 11;
+        fourth := 12;
+        fifth := 20;
+
+        if first = a
+        then count := count +1
+        else;
+        if second = b
+        then count := count +1
+        else;
+        if third = c
+        then count := count +1
+        else;
+        if fourth = d
+        then count := count +1
+        else;
+        if fifth = e
+        then count := count +1
+        else;
+
+        return count
+    end;
+begin
+    compare();
+    print(count)
+end.

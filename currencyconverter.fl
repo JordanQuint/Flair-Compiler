@@ -1,0 +1,33 @@
+{Converts amount given to different currency based on converter selected}
+
+program currencyconverter(amount:real, conversion:integer);
+{still being developed}
+var runningamount : real;
+    desiredconversions : integer;
+function usdollartoeuro(dollars:real) : real
+    begin
+        return dollars * 0.75744
+    end;
+function usdollartopound(dollars:real) : real
+    begin
+        return dollars * 0.63378
+    end;
+function usdollartorouble(dollars:real) : real
+    begin
+        return dollars * 29.4734
+    end;
+function usdollartoyen(dollars:real) : real
+    begin
+        return dollars * 81.39
+    end;
+begin
+    if conversion = 1
+    then print(usdollartoeuro(amount))
+    else if conversion = 2
+         then print(usdollartopound(amount))
+         else if conversion = 3
+              then print(usdollartorouble(amount))
+              else if conversion = 4
+                   then print(usdollartoyen(amount))
+                   else print(0)
+end.
