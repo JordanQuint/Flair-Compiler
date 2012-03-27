@@ -158,36 +158,6 @@
 
 
 //STATEMENTS
-    class StatementList extends FlairAbstractSyntaxTree
-    {
-      private ArrayList<Statement> list;
-      
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-        response = "";
-        for(Statement statement : list)
-        {
-          if (response != "")
-          {
-            response += ";\n";
-          }
-          response += statement.toString();
-        }
-        
-        return "begin\n" + response + "\nend";
-      }
-      
-      public void add(Statement addition)
-      {
-        list.add(addition);
-      }
-   }
-   
    class Statement extends FlairAbstractSyntaxTree
    {
      public void allowVisit(FlairVisitor visitor)
@@ -200,9 +170,52 @@
        return "";
      }
    }
+   
+   //A StatementList can contain several Statements that are themselves StatementLists
+   class StatementList extends Statement
+   {
+     private ArrayList<Statement> list;
+     
+     public StatementList(Statement initial)
+     {
+       list.add(initial);
+     }
+     
+     public void allowVisit(FlairVisitor visitor)
+     {
+        visitor.visit(this);
+     }
+   
+     public String toString()
+     {
+       response = "";
+       for(Statement statement : list)
+       {
+         if (response != "")
+         {
+           response += ";\n";
+         }
+         response += statement.toString();
+       }
+       
+       return "begin\n" + response + "\nend";
+     }
+     
+     public void add(Statement addition)
+     {
+       list.add(addition);
+     }
+   }
 
    class PrintStatement extends Statement
    {
+      private Expression expression;
+      
+      public PrintStatement(Expression e)
+      {
+        expression = e;
+      }
+      
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -210,12 +223,21 @@
     
       public String toString()
       {
-         return "";
+         return "print " + expression.toString();
       }    
    }
 
    class AssignStatement extends Statement
    {
+     private Identifier name;
+     private Expression expression;
+     
+     public AssignmentStatement(Identifier i, Expression e)
+     {
+       name = i;
+       expression = e;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -223,12 +245,23 @@
     
       public String toString()
       {
-         return "";
-      }    
+         return name.toString() + " := " + expression.toString();
+      }
    }
 
    class IfStatement extends Statement
    {
+     private Comparison comparison;
+     private Statement then_statement;
+     private Statement else_statement;
+     
+     public IfStatement(Comparison c, Statement t, Statement e)
+     {
+       comparison = c;
+       then_statement = t;
+       else_statement = e;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -236,12 +269,22 @@
     
       public String toString()
       {
-         return "";
-      }    
+         return "if " + comparison.toString() + " then\n" + then_statement.toString() +
+                "\nelse\n" + else_statement.toString();
+      }
    }
 
    class WhileStatement extends Statement
    {
+      private Comparison comparison;
+      private Statement statement;
+      
+      public WhileStatement(Comparison c, Statement s)
+      {
+        comparison = c;
+        statement = s;
+      }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -249,12 +292,19 @@
     
       public String toString()
       {
-         return "";
-      } 
+         return "while " + comparison.toString() + " do\n" + statement.toString();
+      }
    }
 
    class ReturnStatement extends Statement
    {
+     private Expression expression;
+     
+     public ReturnStatement(Expression e)
+     {
+       expression = e;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -262,9 +312,52 @@
     
       public String toString()
       {
-         return "";
-      } 
+         return "return " + expression.toString();
+      }
    }
+   
+//COMPARISON
+  class Comparison extends FlairAbstractSyntaxTree
+  {
+    private Expression left;
+    private CompareOp operator;
+    private Expression right;
+    
+    public Comparison(Expression l, CompareOp o, Expression r)
+    {
+      left = l;
+      operator = o;
+      right = r;
+    }
+    
+    public void allowVisit(FlairVisitor visitor)
+    {
+      visitor.visit(this);
+    }
+    
+    public String toString()
+    {
+      return left.toString() + " " + operator.toString() + " " + right.toString();
+    }
+  }
+  
+  class CompareOp extends FlairAbstractSyntaxTree
+  {
+    private String op;
+    
+    public CompareOp(String o)
+    {
+      if o.equals("=") || o.equals("<") || o.equals(">") || o.equals("<=") || o.equals(">=") || o.equals("!=")
+      {
+        op = o;
+      }
+    }
+    
+    public String toString()
+    {
+      return "op";
+    }
+  }
 
 
 //EXPRESSIONS
@@ -283,6 +376,8 @@
 
    class NegateExp extends Expression
    {
+     private Expression exp;
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -296,6 +391,9 @@
 
    class AdditionExp extends Expression
    {
+     private Expression exp;
+     private Term term;
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -309,6 +407,9 @@
 
    class SubtractExp extends Expression
    {
+     private Expression exp;
+     private Term term;
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
