@@ -1,0 +1,22 @@
+function divisible_by_seven ( n : integer) : integer;
+
+var
+  left : integer;
+  right : integer;
+  diff : integer;
+
+begin
+	left := n/10;
+	right := mod(n, 10);
+	diff := left-right*2;
+	if diff = 0 then
+		return 1
+	else if diff = -7 then
+		return 1
+	else if diff = 7 then
+		return 1
+	else if diff < 10 then
+		return 0
+	else
+		return divisible_by_seven(diff)
+end

@@ -45,7 +45,7 @@ public class FlairToken
 	 public static final String EOS = "$";
 
     private String type;
-    private Object value;
+    private String value;
 
     public FlairToken(String theType){
        this(theType, null);}
@@ -57,6 +57,6 @@ public class FlairToken
     public String getType(){
 	     return type;}
 	 
-    public Object getValue(){
+    public String getValue(){
 	     return value;}
 }

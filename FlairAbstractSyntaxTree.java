@@ -30,7 +30,7 @@
       private StatementList stats;
     
       public Program(Identifier n, Parameters p, Declaration d, StatementList s)
-      {
+		{
          name = n;
          parameter = p;
          decs = d;
@@ -44,7 +44,7 @@
     
       public String toString()
       {
-         return "program\n" + name.toString() + "(" + parameters.toString() + ");" +
+         return "program\n" + name.toString() + "(" + parameter.toString() + ");" +
                 decs.toString() + stats.toString() + ".";
       }
    }
@@ -58,8 +58,10 @@
      
      public Declaration(VarDec v, FuncDec f)
      {
-       variables = v;
-       functions = f;
+	  	variables = new ArrayList<VarDec>();
+       variables.add(v);
+		 functions = new ArrayList<FuncDec>();
+       functions.add(f);
      }
      
       public void allowVisit(FlairVisitor visitor)
@@ -69,7 +71,7 @@
          
       public String toString()
       {
-        response = "";
+        String response = "";
         if (variables.size() > 0) //can have zero vardecs
         {
           for (VarDec variable : variables)
@@ -132,17 +134,25 @@
      private Type return_type;
      
      //fxn_body
-     private VarDecs variables;
+     private ArrayList<VarDec> variables;
      private StatementList stats;
      
-     public FuncDec(Identifier n, Parameters p, Type t, VarDecs v, StatementList s)
+     public FuncDec(Identifier n, Parameters p, Type t, VarDec v, StatementList s)
      {
        name = n;
        params = p;
-       return_type = r;
-       variables = v;
+       return_type = t;
+		 
+		 //should probably make another constructor if there are no vardecs?
+		 variables = new ArrayList<VarDec>();
+       variables.add(v);
        stats = s;
      }
+	  
+	  public void addVarDec(VarDec v)
+	  {
+		variables.add(v);
+	  }
      
      public void allowVisit(FlairVisitor visitor)
      {
@@ -151,8 +161,14 @@
     
      public String toString()
      {
+	  	String vars = "";
+		for(VarDec v : variables)
+		{
+			vars += v.toString();
+		}
+	  
        return "function" + name.toString() + "(" + params.toString() + ") :" +
-              return_type.toString() + "\n" + variables.toString() + stats.toString() + ";";
+              return_type.toString() + "\n" + "var\n" + vars + stats.toString() + ";";
      }
    }
 
@@ -188,7 +204,7 @@
    
      public String toString()
      {
-       response = "";
+       String response = "";
        for(Statement statement : list)
        {
          if (response != "")
@@ -232,7 +248,7 @@
      private Identifier name;
      private Expression expression;
      
-     public AssignmentStatement(Identifier i, Expression e)
+     public AssignStatement(Identifier i, Expression e)
      {
        name = i;
        expression = e;
@@ -347,7 +363,7 @@
     
     public CompareOp(String o)
     {
-      if o.equals("=") || o.equals("<") || o.equals(">") || o.equals("<=") || o.equals(">=") || o.equals("!=")
+      if (o.equals("=") || o.equals("<") || o.equals(">") || o.equals("<=") || o.equals(">=") || o.equals("!="))
       {
         op = o;
       }
@@ -420,9 +436,27 @@
          return "";
       }
    }
-
-   class MultiplicationExp extends Expression
+   
+   class Term extends FlairAbstractSyntaxTree
    {
+   //placeholder superclass for the three types of terms below
+     public String toString()
+     {
+        return "";
+     }
+   }
+
+   class MultiplicationTerm extends Term
+   {
+     private Term term;
+     private Factor factor;
+     
+     public MultiplicationTerm(Term t, Factor f)
+     {
+       term = t;
+       factor = f;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -430,25 +464,88 @@
     
       public String toString()
       {
-         return "";
+         return term.toString() + " * " + factor.toString();
       }
    }
 
-   class DivisionExp extends Expression
+   class DivisionTerm extends Term
    {
-      public void allowVisit(FlairVisitor visitor)
+      private Term term;
+      private Factor factor;
+
+      public DivisionTerm(Term t, Factor f)
       {
-         visitor.visit(this);
+        term = t;
+        factor = f;
       }
-    
-      public String toString()
-      {
-         return "";
-      }
+
+       public void allowVisit(FlairVisitor visitor)
+       {
+          visitor.visit(this);
+       }
+
+       public String toString()
+       {
+          return term.toString() + " / " + factor.toString();
+       }
+   }
+   
+   class Factor extends Term
+   {
+     private Expression exp = null;
+     private FunctionCall ftn = null;
+     private Identifier var = null;
+     private Literal val = null;
+     
+     public Factor(Expression e)
+     {
+       exp = e;
+     }
+     
+     public Factor(FunctionCall f)
+     {
+       ftn = f;
+     }
+     
+     public Factor(Identifier v)
+     {
+       var = v;
+     }
+     
+     public Factor(Literal v)
+     {
+       val = v;
+     }
+     
+     public void allowVisit(FlairVisitor visitor)
+     {
+       visitor.visit(this);
+     }
+     
+     public String toString()
+     {
+       if (exp != null)
+         return "( " + exp.toString() + " )";
+       else if (ftn != null)
+         return ftn.toString();
+       else if (var != null)
+         return var.toString();
+       else if (val != null)
+         return val.toString();
+     }
    }
 
    class FunctionCall extends Expression
    {
+     private Identifier name;
+     private Arguments args;
+     
+     public FunctionCall(Identifier n, Arguments a)
+     {
+       name = n;
+       args = a;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -456,22 +553,27 @@
     
       public String toString()
       {
-         return "";
+         return name.toString() + " ( " + args.toString() + " ) ";
       }
    }
+   
+   class Literal extends FlairAbstractSyntaxTree
+   {
+     
+   }
 
-   class IntegerNum extends Expression
+   class IntegerNum extends Literal
    {
       private String number;
     
-      public IntegerNum(Token n)
+      public IntegerNum(FlairToken n)
       {
-         number = n.getValue();
+         number = (String)n.getValue();
       }
     
       public String toString()
       {
-         return "Integer = " + number;
+         return number;
       }
     
       public void allowVisit(FlairVisitor visitor)
@@ -480,18 +582,18 @@
       }    
    }
 
-   class RealNum extends Expression
+   class RealNum extends Literal
    {
       private String number;
     
-      public RealNum(Token n)
+      public RealNum(FlairToken n)
       {
-         number = n.getValue();
+         number = (String)n.getValue();
       }
     
       public String toString()
       {
-         return "Real = " + number;
+         return number;
       }
     
       public void allowVisit(FlairVisitor visitor)
@@ -504,14 +606,14 @@
    {
       private String word;
     
-      public RealNum(Token w)
+      public Identifier(FlairToken w)
       {
-         word = w.getValue();
+         word = (String)w.getValue();
       }
     
       public String toString()
       {
-         return "Identifier = " + number;
+         return word;
       }
     
       public void allowVisit(FlairVisitor visitor)
@@ -526,14 +628,14 @@
    {
       private String selection;
     
-      public RealNum(Token t)
+      public Type(FlairToken t)
       {
          selection = t.getValue();
       }
     
       public String toString()
       {
-         return "Type = " + number;
+         return "Type = " + selection;
       }
     
       public void allowVisit(FlairVisitor visitor)
@@ -547,6 +649,19 @@
 //PARAMETERS
    class Parameters extends FlairAbstractSyntaxTree
    {
+     private ArrayList<Parameter> list;
+     
+     public Parameters(Parameter p)
+     {
+       list = new ArrayList<Parameter>();
+       list.add(p);
+     }
+     
+     public void add(Parameter addition)
+     {
+       list.add(addition);
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -554,12 +669,29 @@
     
       public String toString()
       {
-         return "";
+         String response = "";
+         for(Parameter p : list)
+         {
+           if (response == "")
+             response += p.toString();
+           else
+             response += ", " + p.toString();
+         }
+         return response;
       }
    }
 
    class Parameter extends Parameters
    {
+     private Identifier name;
+     private Type type;
+     
+     public Parameter(Identifier i, Type t)
+     {
+       name = i;
+       type = t;
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -567,7 +699,7 @@
     
       public String toString()
       {
-         return "";
+         return name.toString() + " : " + type.toString();
       }
    }
 
@@ -575,6 +707,19 @@
 //ARGUMENTS
    class Arguments extends FlairAbstractSyntaxTree
    {
+     private ArrayList<Expression> list;
+     
+     public Arguments(Expression a)
+     {
+       list = new ArrayList<Expression>();
+       list.add(a);
+     }
+     
+     public void add(Expression a)
+     {
+       list.add(a);
+     }
+     
       public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
@@ -582,19 +727,16 @@
     
       public String toString()
       {
-         return "";
+        String response = "";
+        
+        for(Expression e : list)
+        {
+          if (response == "")
+            response += e.toString();
+          else
+            response += ", " + e.toString();
+        }
+        
+         return response;
       } 
-   }
-
-   class Argument extends Arguments
-   {
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "";
-      }
    }

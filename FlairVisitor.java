@@ -20,11 +20,13 @@ public interface FlairVisitor
 	 public void visit(NegateExp flairNegateExp);
 	 public void visit(AdditionExp flairAdditionExp);
 	 public void visit(SubtractExp flairSubtractExp);
-	 public void visit(MultiplicationExp flairMultExp);
-	 public void visit(DivisionExp flairDivisionExp);
+	 public void visit(MultiplicationTerm flairMultExp);
+	 public void visit(DivisionTerm flairDivisionExp);
 	 public void visit(FunctionCall flairFunctionCall);
-	 public void visit(FunctionHeading flairFunctionHeading);
-	 public void visit(FunctionBody flairFunctionBody);
+// 	 public void visit(FunctionHeading flairFunctionHeading);
+// 	 public void visit(FunctionBody flairFunctionBody);
+	 public void visit(Comparison flairComparison);
+	 public void visit(Factor flairFactor);
 	 public void visit(IntegerNum flairIntegerNum);
 	 public void visit(RealNum flairRealNum);
 	 public void visit(Identifier flairIdentifier);
@@ -32,5 +34,4 @@ public interface FlairVisitor
 	 public void visit(Parameters flairParameters);
 	 public void visit(Parameter flairParameter);
 	 public void visit(Arguments flairArguments);
-	 public void visit(Argument flairArgument);
 }
