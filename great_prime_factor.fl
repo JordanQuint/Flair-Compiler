@@ -1,4 +1,4 @@
-function factors ( input : integer) : integer;
+function greatest_prime_factor ( input : integer) : integer;
 
 var
   current : integer;
@@ -14,7 +14,7 @@ begin
   begin
     if mod(input, current) == 0 then {if it divides evenly, then}
     begin
-      is_prime = is_prime(input);
+      is_prime = is_prime(input / current);
       
       if is_prime == 1
         answer = input / current
