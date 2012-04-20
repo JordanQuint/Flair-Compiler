@@ -13,18 +13,18 @@
       private Stack<String> parseStack = new Stack<String>();
       private Stack<Object> semanticStack = new Stack<Object>();
       private FlairScanner tokenStream;
-      private Token lastToken;
-    
-      public static void main(String[] args){
-         FlairParser parse = new FlairParser(args[0]);
-         System.out.println(parse.parse());
-        
-      }
+      private FlairToken lastToken;
     
       public FlairParser(String flairFile){
          tokenStream = new FlairScanner(flairFile);
          this.createTable();
       }
+		
+		public static void main(String[] args){
+	     FlairParser parse = new FlairParser(args[0]);
+		  System.out.println(parse.parse());
+		  
+	 }
     
     //Determines whether the stream of tokens are syntactically correct.
       public FlairAbstractSyntaxTree parse()
@@ -52,11 +52,6 @@
         
          while(!parseStack.peek().equals("$"))
          {
-         	//
-         	//For testing to see the stack vs token
-            System.out.println("stack = " + parseStack.peek() + "   token = " + currentToken.getType());
-         	//
-         	
             if(tokenList.contains(parseStack.peek()))
             {
                if(parseStack.peek().equals(currentToken.getType()))
@@ -76,7 +71,6 @@
             else if(states.contains(parseStack.peek()))
             {
                String firstValue = parseTable[states.indexOf(parseStack.peek())+1][tokenList.indexOf(currentToken.getType())+1][0];
-               System.out.println(firstValue + " " + currentToken.getValue());
             	 
             	 //test to see if allowed to be empty
                if(firstValue.equals("E"))
@@ -115,7 +109,7 @@
             
             else if(parseStack.peek().startsWith("make"))
             {
-                //this.chooseAction(parseStack.peek());
+               this.chooseAction(parseStack.peek());
                parseStack.pop();
             }
          }
@@ -125,21 +119,19 @@
     
       private void chooseAction(String action)
       {
-         if(action.equals("makeProgram"))
-         {
-            parseStack.push(new Program(semanticStack.pop(), semanticStack.pop(), semanticStack.pop(), semanticStack.pop()));
+         if(action.equals("makeProgram")){
+            semanticStack.push(new Program());
          }
-         else if(action.equals("makeIntNum")) //use just the token
-         {
-            parseStack.push(new IntegerNum(lastToken));
+         else if(action.equals("makeIntNum")){
+            parseStack.push(new IntegerNum(lastToken.getValue()));
          }
          else if(action.equals("makeRealNum"))
          {
-            parseStack.push(new RealNum(lastToken));
+            parseStack.push(new RealNum(lastToken.getValue()));
          }
          else if(action.equals("makeID"))
          {
-            parseStack.push(new Identifier(lastToken));
+            parseStack.push(new Identifier(lastToken.getValue()));
          }
          else if(action.equals("makeType"))
          {
@@ -188,10 +180,10 @@
          else if(action.equals("makeReturnStat"))
          {
             parseStack.push(new ReturnStatement(semanticStack.pop()));
-         }
+         }*/
          else if(action.equals("makeCompStat"))
          {
-            parseStack.push(new CompStatement(semanticStack.pop()));
+           semanticStack.push(new CompStatement());
          }
          
          
@@ -199,7 +191,7 @@
          
          
          //Not Complete
-         
+         /*
          else if(action.equals("makeExp"))
          {
             parseStack.push(new Expression(semanticStack.pop()));
@@ -232,6 +224,7 @@
          {
             parseStack.push(new Argument(semanticStack.pop()));
          }
+			*/
       }
     
     
@@ -349,8 +342,8 @@
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
                
-               {new String[] {"TYPE"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"integer"},
-                  new String[] {"real"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+               {new String[] {"TYPE"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"integer", "makeType"},
+                  new String[] {"real", "makeType"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},

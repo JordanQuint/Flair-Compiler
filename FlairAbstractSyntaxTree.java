@@ -1,5 +1,5 @@
 /*
-  Compiler Project: Parser Part 1 Assignment 03/08/12
+  Compiler Project: Parser 04/19/12
   Authors: Andrew, Jordan, and Zane
   FlairAbstractSyntaxTree class
 */
@@ -8,44 +8,52 @@
    import java.io.*;
 
    public class FlairAbstractSyntaxTree
-   {
-     private Program program;
-     
-     public FlairAbstractSyntaxTree(Program p)
-     {
-       program = p;
-     }
-     
+   { 
       public String toString()
       {
-         return program.toString();
+         return "";
       }    
    }
 
-   class Program extends FlairAbstractSyntaxTree
-   {
+   class Program extends FlairAbstractSyntaxTree{
       private Identifier name;
-      private Parameters parameter;
+      private Parameters parameters;
       private Declaration decs;
-      private StatementList stats;
+      private CompStatement cstat;
     
-      public Program(Identifier n, Parameters p, Declaration d, StatementList s)
+      public Program(Identifier n, Parameters p, Declaration d, CompStatement c)
 		{
          name = n;
-         parameter = p;
+         parameters = p;
          decs = d;
-         stats = s;
+         cstat = c;
       }
+		
+		public Identifier name(){
+		    return name;
+		}
+		
+		public Parameters parameters(){
+		    return parameters;
+		}
+		
+		public Declaration declarations(){
+		    return decs;
+		}
+		
+		public CompStatement compStatement(){
+		    return cstat;
+		}
     
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
+          visitor.visit(this);
       }
     
       public String toString()
       {
-         return "program\n" + name.toString() + "(" + parameter.toString() + ");" +
-                decs.toString() + stats.toString() + ".";
+         return "program\n" + name.toString() + "(" + parameters.toString() + ");" +
+                decs.toString() + cstat.toString() + ".";
       }
    }
 
@@ -53,15 +61,13 @@
 //DECLARATIONS
    class Declaration extends FlairAbstractSyntaxTree
    {
-     private ArrayList<VarDec> variables;
-     private ArrayList<FuncDec> functions;
+     private VarDecs vdecs;
+     private FuncDecs fdecs;
      
-     public Declaration(VarDec v, FuncDec f)
+     public Declaration(VarDecs v, FuncDecs f)
      {
-	  	variables = new ArrayList<VarDec>();
-       variables.add(v);
-		 functions = new ArrayList<FuncDec>();
-       functions.add(f);
+	  	 vdecs = v;
+       fecs = f;
      }
      
       public void allowVisit(FlairVisitor visitor)
@@ -71,38 +77,76 @@
          
       public String toString()
       {
-        String response = "";
-        if (variables.size() > 0) //can have zero vardecs
-        {
-          for (VarDec variable : variables)
-          {
-            response += variable.toString();
-          }
-        }
-        
-        response += "\n";
-        
-        if (functions.size() > 0) //can have zero funcdecs
-        {
-          for (FuncDec function : functions)
-          {
-            response += function.toString();
-          }
-        }
-        
-        return response;
-      }
-      
-      public void addVarDec(VarDec addition)
-      {
-        variables.add(addition);
-      }
-      
-      public void addFuncDec(FuncDec addition)
-      {
-        functions.add(addition);
+		    return vdecs + fdecs;
       }
    }
+	
+	class VarDecs extends Declaration
+   {
+     private ArrayList<VarDec> variables;
+     
+     public VarDecs(Identifier i, Type t)
+     {
+       identifier = i;
+       type = t;
+     }
+	  
+	  public Identifier name()
+	  {
+	      return identfier;
+	  }
+	  
+	  public Type theType()
+	  {
+	      return type;
+	  }
+
+     
+      public void allowVisit(FlairVisitor visitor)
+      {
+         visitor.visit(this);
+      }
+      
+      public String toString()
+      {
+         return identifier + ":" + type + "\n";
+      }
+   }
+	
+	class FuncDecs extends Declaration
+   {
+     private Identifier identifier;
+     private Type type;
+     
+     public FuncDecs(Identifier i, Type t)
+     {
+       identifier = i;
+       type = t;
+     }
+	  
+	  public Identifier name()
+	  {
+	      return identfier;
+	  }
+	  
+	  public Type theType()
+	  {
+	      return type;
+	  }
+
+     
+      public void allowVisit(FlairVisitor visitor)
+      {
+         visitor.visit(this);
+      }
+      
+      public String toString()
+      {
+         return identifier + ":" + type + "\n";
+      }
+   }
+	
+	
 
    class VarDec extends Declaration
    {
@@ -114,6 +158,17 @@
        identifier = i;
        type = t;
      }
+	  
+	  public Identifier name()
+	  {
+	      return identfier;
+	  }
+	  
+	  public Type theType()
+	  {
+	      return type;
+	  }
+
      
       public void allowVisit(FlairVisitor visitor)
       {
@@ -171,393 +226,21 @@
               return_type.toString() + "\n" + "var\n" + vars + stats.toString() + ";";
      }
    }
-
-
-//STATEMENTS
-   class Statement extends FlairAbstractSyntaxTree
-   {
-     public void allowVisit(FlairVisitor visitor)
-     {
-       visitor.visit(this);
-     }
-
-     public String toString()
-     {
-       return "";
-     }
-   }
-   
-   //A StatementList can contain several Statements that are themselves StatementLists
-   class StatementList extends Statement
-   {
-     private ArrayList<Statement> list;
-     
-     public StatementList(Statement initial)
-     {
-       list.add(initial);
-     }
-     
-     public void allowVisit(FlairVisitor visitor)
-     {
-        visitor.visit(this);
-     }
-   
-     public String toString()
-     {
-       String response = "";
-       for(Statement statement : list)
-       {
-         if (response != "")
-         {
-           response += ";\n";
-         }
-         response += statement.toString();
-       }
-       
-       return "begin\n" + response + "\nend";
-     }
-     
-     public void add(Statement addition)
-     {
-       list.add(addition);
-     }
-   }
-
-   class PrintStatement extends Statement
-   {
-      private Expression expression;
-      
-      public PrintStatement(Expression e)
-      {
-        expression = e;
-      }
-      
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "print " + expression.toString();
-      }    
-   }
-
-   class AssignStatement extends Statement
-   {
-     private Identifier name;
-     private Expression expression;
-     
-     public AssignStatement(Identifier i, Expression e)
-     {
-       name = i;
-       expression = e;
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return name.toString() + " := " + expression.toString();
-      }
-   }
-
-   class IfStatement extends Statement
-   {
-     private Comparison comparison;
-     private Statement then_statement;
-     private Statement else_statement;
-     
-     public IfStatement(Comparison c, Statement t, Statement e)
-     {
-       comparison = c;
-       then_statement = t;
-       else_statement = e;
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "if " + comparison.toString() + " then\n" + then_statement.toString() +
-                "\nelse\n" + else_statement.toString();
-      }
-   }
-
-   class WhileStatement extends Statement
-   {
-      private Comparison comparison;
-      private Statement statement;
-      
-      public WhileStatement(Comparison c, Statement s)
-      {
-        comparison = c;
-        statement = s;
-      }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "while " + comparison.toString() + " do\n" + statement.toString();
-      }
-   }
-
-   class ReturnStatement extends Statement
-   {
-     private Expression expression;
-     
-     public ReturnStatement(Expression e)
-     {
-       expression = e;
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "return " + expression.toString();
-      }
-   }
-   
-//COMPARISON
-  class Comparison extends FlairAbstractSyntaxTree
-  {
-    private Expression left;
-    private CompareOp operator;
-    private Expression right;
-    
-    public Comparison(Expression l, CompareOp o, Expression r)
-    {
-      left = l;
-      operator = o;
-      right = r;
-    }
-    
-    public void allowVisit(FlairVisitor visitor)
-    {
-      visitor.visit(this);
-    }
-    
-    public String toString()
-    {
-      return left.toString() + " " + operator.toString() + " " + right.toString();
-    }
-  }
-  
-  class CompareOp extends FlairAbstractSyntaxTree
-  {
-    private String op;
-    
-    public CompareOp(String o)
-    {
-      if (o.equals("=") || o.equals("<") || o.equals(">") || o.equals("<=") || o.equals(">=") || o.equals("!="))
-      {
-        op = o;
-      }
-    }
-    
-    public String toString()
-    {
-      return "op";
-    }
-  }
-
-
-//EXPRESSIONS
-   class Expression extends FlairAbstractSyntaxTree
-   {
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "";
-      }
-   }
-
-   class NegateExp extends Expression
-   {
-     private Expression exp;
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "";
-      }
-   }
-
-   class AdditionExp extends Expression
-   {
-     private Expression exp;
-     private Term term;
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "";
-      }
-   }
-
-   class SubtractExp extends Expression
-   {
-     private Expression exp;
-     private Term term;
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return "";
-      }
-   }
-   
-   class Term extends FlairAbstractSyntaxTree
-   {
-   //placeholder superclass for the three types of terms below
-     public String toString()
-     {
-        return "";
-     }
-   }
-
-   class MultiplicationTerm extends Term
-   {
-     private Term term;
-     private Factor factor;
-     
-     public MultiplicationTerm(Term t, Factor f)
-     {
-       term = t;
-       factor = f;
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return term.toString() + " * " + factor.toString();
-      }
-   }
-
-   class DivisionTerm extends Term
-   {
-      private Term term;
-      private Factor factor;
-
-      public DivisionTerm(Term t, Factor f)
-      {
-        term = t;
-        factor = f;
-      }
-
-       public void allowVisit(FlairVisitor visitor)
-       {
-          visitor.visit(this);
-       }
-
-       public String toString()
-       {
-          return term.toString() + " / " + factor.toString();
-       }
-   }
-   
-   class Factor extends Term
-   {
-     private Expression exp = null;
-     private FunctionCall ftn = null;
-     private Identifier var = null;
-     private Literal val = null;
-     
-     public Factor(Expression e)
-     {
-       exp = e;
-     }
-     
-     public Factor(FunctionCall f)
-     {
-       ftn = f;
-     }
-     
-     public Factor(Identifier v)
-     {
-       var = v;
-     }
-     
-     public Factor(Literal v)
-     {
-       val = v;
-     }
-     
-     public void allowVisit(FlairVisitor visitor)
-     {
-       visitor.visit(this);
-     }
-     
-     public String toString()
-     {
-       if (exp != null)
-         return "( " + exp.toString() + " )";
-       else if (ftn != null)
-         return ftn.toString();
-       else if (var != null)
-         return var.toString();
-       else if (val != null)
-         return val.toString();
-     }
-   }
-
-   class FunctionCall extends Expression
-   {
-     private Identifier name;
-     private Arguments args;
-     
-     public FunctionCall(Identifier n, Arguments a)
-     {
-       name = n;
-       args = a;
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return name.toString() + " ( " + args.toString() + " ) ";
-      }
-   }
-   
-   class Literal extends FlairAbstractSyntaxTree
+	
+	class FuncHead extends FlairAbstractSyntaxTree
+	{
+	
+	}
+	
+	class FuncBody extends FlairAbstractSyntaxTree
+	{
+	
+	}
+	
+	
+	
+	
+	class Literal extends Expression
    {
      
    }
@@ -566,9 +249,9 @@
    {
       private String number;
     
-      public IntegerNum(FlairToken n)
+      public IntegerNum(String n)
       {
-         number = (String)n.getValue();
+         number = n;
       }
     
       public String toString()
@@ -586,9 +269,9 @@
    {
       private String number;
     
-      public RealNum(FlairToken n)
+      public RealNum(String n)
       {
-         number = (String)n.getValue();
+         number = n;
       }
     
       public String toString()
@@ -628,9 +311,9 @@
    {
       private String selection;
     
-      public Type(FlairToken t)
+      public Type(String t)
       {
-         selection = t.getValue();
+         selection = t;
       }
     
       public String toString()
@@ -644,99 +327,352 @@
       }
     
    }
-
-
-//PARAMETERS
-   class Parameters extends FlairAbstractSyntaxTree
-   {
-     private ArrayList<Parameter> list;
-     
-     public Parameters(Parameter p)
-     {
-       list = new ArrayList<Parameter>();
-       list.add(p);
-     }
-     
-     public void add(Parameter addition)
-     {
-       list.add(addition);
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
+	
+	class Parameter extends FlairAbstractSyntaxTree
+	{
+	    private Identifier id;
+		 private Type theType;
+		 
+		 public Parameter(Identifier i, Type t)
+		 {
+		     id = i;
+			  theType = t;
+		 }
+		 
+		 public Identifier getID()
+		 {
+		     return id;
+		 }
+		 
+		 public Type getTheType()
+		 {
+		     return theType;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
       {
          visitor.visit(this);
       }
-    
-      public String toString()
-      {
-         String response = "";
-         for(Parameter p : list)
-         {
-           if (response == "")
-             response += p.toString();
-           else
-             response += ", " + p.toString();
-         }
-         return response;
-      }
-   }
-
-   class Parameter extends Parameters
+		 
+		 
+	}
+	
+	class Parameters extends FlairAbstractSyntaxTree
+	{
+	    private ArrayList<Parameter> parameters;
+	}
+	
+	class Statement extends FlairAbstractSyntaxTree
    {
-     private Identifier name;
-     private Type type;
-     
-     public Parameter(Identifier i, Type t)
+     public void allowVisit(FlairVisitor visitor)
      {
-       name = i;
-       type = t;
+       visitor.visit(this);
      }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-         return name.toString() + " : " + type.toString();
-      }
-   }
 
-
-//ARGUMENTS
-   class Arguments extends FlairAbstractSyntaxTree
-   {
-     private ArrayList<Expression> list;
-     
-     public Arguments(Expression a)
+     public String toString()
      {
-       list = new ArrayList<Expression>();
-       list.add(a);
+       return "";
      }
-     
-     public void add(Expression a)
-     {
-       list.add(a);
-     }
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-    
-      public String toString()
-      {
-        String response = "";
-        
-        for(Expression e : list)
-        {
-          if (response == "")
-            response += e.toString();
-          else
-            response += ", " + e.toString();
-        }
-        
-         return response;
-      } 
    }
+	
+	class Statements extends FlairAbstractSyntaxTree{
+	
+	}
+	
+	class AssignStatement extends Statement{
+	    private Identifier id;
+		 private Expression exp;
+		 
+		 public AssignStatement(Identifier i, Expression e){
+		     id=i;
+			  exp=e;
+		 }
+		 
+		 public Identifier getID(){
+		     return id;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return id + " = " + exp;
+       }
+		 
+	}
+	
+	class IfStatement extends Statement{
+	    private Comparison comp;
+		 private Statement stat1;
+		 private Statement stat2;
+		 
+		 public IfStatement(Comparison c, Statement s1, Statement s2){
+		     comp=c;
+			  stat1=s1;
+			  stat2=s2;
+		 }
+		 
+		 public Identifier getComp(){
+		     return comp;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "if " + comp + " then " + stat1 + " else " + stat2;
+       }
+	}
+	
+	class WhileStatement extends Statement{
+	    private Comparison comp;
+		 private Statement stat;
+		 
+		 public WhileStatement(Comparison c, Statement s){
+		     comp=c;
+			  stat=s;
+		 }
+		 
+		 public Identifier getComp(){
+		     return comp;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "while " + comp + " do " + stat;
+       }
+	}
+	
+	class ReturnStatement extends Statement{
+	    private Expression exp;
+		 
+		 public ReturnStatement(Expression e){
+		     exp = e;
+		 }
+		 		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "return " + exp;
+       }
+	}
+	
+	class CompStatement extends Statement{
+	    private Statements stats;
+		 
+		 public WhileStatement(Statements s){
+			  stats=s;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "begin " + stats + " end";
+       }
+	}
+	
+	class PrintStatement extends Statement{
+	    private Expression exp;
+		 
+		 public WhileStatement(Expression e){
+		     exp=e;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "return " + exp;
+       }
+	}
+	
+	class Expression extends FlairAbstractSyntaxTree{
+	
+	}
+	
+	class NegateExp extends Expression{
+	    private Expression exp;
+		 
+		 public NegateExp(Expression e){
+		     exp = e;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return "- " + exp;
+       }
+	}
+	
+	class AddExp extends Expression{
+	    private Expression exp1;
+		 private Expression exp2;
+		 
+		 public NegateExp(Expression e1, Expression e2){
+		     exp1 = e1;
+			  exp2 = e2;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return exp1 + " + " + exp2;
+       }
+	
+	}
+	
+	class SubExp extends Expression{
+	    private Expression exp1;
+		 private Expression exp2;
+		 
+		 public NegateExp(Expression e1, Expression e2){
+		     exp1 = e1;
+			  exp2 = e2;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return exp1 + " - " + exp2;
+       }
+	}
+	
+	class MultExp extends Expression{
+	    private Expression exp1;
+		 private Expression exp2;
+		 
+		 public NegateExp(Expression e1, Expression e2){
+		     exp1 = e1;
+			  exp2 = e2;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return exp1 + " * " + exp2;
+       }
+	}
+	
+	class DivExp extends Expression{
+	    private Expression exp1;
+		 private Expression exp2;
+		 
+		 public NegateExp(Expression e1, Expression e2){
+		     exp1 = e1;
+			  exp2 = e2;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return exp1 + " / " + exp2;
+       }
+	}
+	
+	class FuncCall extends Expression{
+	    private Identifier id;
+		 private Expression args;
+		 
+		 public NegateExp(Identifier i, Expression e){
+		     id = i;
+			  args = e;
+		 }
+	    
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return id + " /n " + args;
+       }
+	}
+	
+	class Arguments extends FlairAbstractSyntaxTree{
+	
+	}
+	
+	class Comparison extends FlairAbstractSyntaxTree{
+	    private Expression exp1;
+		 private CompareOp op;
+		 private Expression exp2;
+		 
+		 public Comparison(Expression e1, CompareOp c, Expression e2){
+		     exp1 = e1;
+			  op = c;
+			  exp2 = e2;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return exp1 + " " + op + " " + exp2;
+       }
+		 
+	}
+	
+	class CompareOp extends FlairAbstractSyntaxTree{
+	    private String op;
+		 
+		 public CompareOp(String o){
+		     op = o;
+		 }
+		 
+		 public void allowVisit(FlairVisitor visitor)
+       {
+           visitor.visit(this);
+       }
+
+       public String toString()
+       {
+           return op;
+       }
+	
+	}
