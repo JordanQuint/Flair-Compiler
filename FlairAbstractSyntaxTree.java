@@ -18,10 +18,10 @@
    class Program extends FlairAbstractSyntaxTree{
       private Identifier name;
       private Parameters parameters;
-      private Declaration decs;
+      private Declarations decs;
       private CompStatement cstat;
     
-      public Program(Identifier n, Parameters p, Declaration d, CompStatement c)
+      public Program(Identifier n, Parameters p, Declarations d, CompStatement c)
 		{
          name = n;
          parameters = p;
@@ -37,7 +37,7 @@
 		    return parameters;
 		}
 		
-		public Declaration declarations(){
+		public Declarations declarations(){
 		    return decs;
 		}
 		
@@ -45,10 +45,12 @@
 		    return cstat;
 		}
     
+	   /*
       public void allowVisit(FlairVisitor visitor)
       {
           visitor.visit(this);
       }
+		*/
     
       public String toString()
       {
@@ -59,182 +61,216 @@
 
 
 //DECLARATIONS
-   class Declaration extends FlairAbstractSyntaxTree
+   class Declarations extends FlairAbstractSyntaxTree
    {
      private VarDecs vdecs;
      private FuncDecs fdecs;
      
-     public Declaration(VarDecs v, FuncDecs f)
+     public Declarations(VarDecs v, FuncDecs f)
      {
 	  	 vdecs = v;
-       fecs = f;
+       fdecs = f;
      }
      
+      /*
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
-      } 
+          visitor.visit(this);
+      }
+		*/ 
          
       public String toString()
       {
-		    return vdecs + fdecs;
+		    return vdecs.toString() + fdecs.toString();
       }
    }
 	
-	class VarDecs extends Declaration
-   {
-     private ArrayList<VarDec> variables;
-     
-     public VarDecs(Identifier i, Type t)
-     {
-       identifier = i;
-       type = t;
-     }
-	  
-	  public Identifier name()
-	  {
-	      return identfier;
-	  }
-	  
-	  public Type theType()
-	  {
-	      return type;
-	  }
-
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-      
-      public String toString()
-      {
-         return identifier + ":" + type + "\n";
-      }
-   }
-	
-	class FuncDecs extends Declaration
-   {
-     private Identifier identifier;
-     private Type type;
-     
-     public FuncDecs(Identifier i, Type t)
-     {
-       identifier = i;
-       type = t;
-     }
-	  
-	  public Identifier name()
-	  {
-	      return identfier;
-	  }
-	  
-	  public Type theType()
-	  {
-	      return type;
-	  }
-
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-      
-      public String toString()
-      {
-         return identifier + ":" + type + "\n";
-      }
-   }
-	
-	
-
-   class VarDec extends Declaration
-   {
-     private Identifier identifier;
-     private Type type;
-     
-     public VarDec(Identifier i, Type t)
-     {
-       identifier = i;
-       type = t;
-     }
-	  
-	  public Identifier name()
-	  {
-	      return identfier;
-	  }
-	  
-	  public Type theType()
-	  {
-	      return type;
-	  }
-
-     
-      public void allowVisit(FlairVisitor visitor)
-      {
-         visitor.visit(this);
-      }
-      
-      public String toString()
-      {
-         return identifier + ":" + type + "\n";
-      }
-   }
-
-   class FuncDec extends Declaration
-   {
-     //fxn_head
-     private Identifier name;
-     private Parameters params;
-     private Type return_type;
-     
-     //fxn_body
-     private ArrayList<VarDec> variables;
-     private StatementList stats;
-     
-     public FuncDec(Identifier n, Parameters p, Type t, VarDec v, StatementList s)
-     {
-       name = n;
-       params = p;
-       return_type = t;
+	class VarDecs extends FlairAbstractSyntaxTree
+   {	
+		private ArrayList<VarDec> variables = new ArrayList<VarDec>();
 		 
-		 //should probably make another constructor if there are no vardecs?
-		 variables = new ArrayList<VarDec>();
-       variables.add(v);
-       stats = s;
+		 public VarDecs(ArrayList<VarDec> vds){
+		     for(int i=0; i<vds.size(); i++){
+		         variables.add((VarDec)vds.get(i));
+			  }
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+
+       public String toString()
+       {
+		     String theVars = "";
+		     for(int z = 0; z<variables.size(); z++){
+			     theVars = theVars + variables.get(z) + "\n";
+			  }
+           return theVars;
+       }
+   }
+	
+	class FuncDecs extends FlairAbstractSyntaxTree
+   {
+     private ArrayList<FuncDec> functions = new ArrayList<FuncDec>();
+		 
+		 public FuncDecs(ArrayList<FuncDec> fds){
+		     for(int i=0; i<fds.size(); i++){
+		         functions.add((FuncDec)fds.get(i));
+			  }
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+
+       public String toString()
+       {
+		     String theFuncs = "";
+		     for(int z = 0; z<functions.size(); z++){
+			     theFuncs = theFuncs + functions.get(z) + "\n";
+			  }
+           return theFuncs;
+       }
+   }
+	
+	
+
+   class VarDec extends FlairAbstractSyntaxTree
+   {
+     private Identifier identifier;
+     private Type type;
+     
+     public VarDec(Identifier i, Type t){
+       identifier = i;
+       type = t;
      }
 	  
-	  public void addVarDec(VarDec v)
-	  {
-		variables.add(v);
+	  public Identifier name(){
+	      return identifier;
+	  }
+	  
+	  public Type theType(){
+	      return type;
 	  }
      
-     public void allowVisit(FlairVisitor visitor)
+      /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+      
+      public String toString(){
+         return identifier + " : " + type + "\n";
+      }
+   }
+
+   class FuncDec extends FlairAbstractSyntaxTree
+   {
+     private FuncHead fh;
+	  private FuncBody fb;
+     
+     public FuncDec(FuncHead h, FuncBody b)
      {
-       visitor.visit(this);
+       fh = h;
+       fb = b;
      }
+	  
+	  public FuncHead head()
+	  {
+		 return fh;
+	  }
+	  
+	  public FuncBody body()
+	  {
+		 return fb;
+	  } 
+     
+     /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
     
      public String toString()
      {
-	  	String vars = "";
-		for(VarDec v : variables)
-		{
-			vars += v.toString();
-		}
-	  
-       return "function" + name.toString() + "(" + params.toString() + ") :" +
-              return_type.toString() + "\n" + "var\n" + vars + stats.toString() + ";";
+	    return fh.toString() + fb.toString();
      }
    }
 	
-	class FuncHead extends FlairAbstractSyntaxTree
-	{
+	class FuncHead extends FlairAbstractSyntaxTree{
+	    private Identifier id;
+		 private Parameters params;
+		 private Type type;
+		 
+		 public FuncHead(Identifier i, Parameters p, Type t){
+		     id = i;
+			  params = p;
+			  type = t;
+		 }
+		 
+		 public Identifier getID(){
+		     return id;
+		 }
+		 
+		 public Parameters getParams(){
+		     return params;
+		 }
+		 
+		 public Type getType(){
+		     return type;
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+		 
+		 public String toString()
+       {
+	        return "function " + id.toString() + " (" + params.toString() + ") : " + type.toString();
+       }
 	
 	}
 	
 	class FuncBody extends FlairAbstractSyntaxTree
 	{
-	
+	    private VarDecs vdecs;
+		 private CompStatement cstat;
+		 
+		 public FuncBody(VarDecs v, CompStatement c){
+		     vdecs = v;
+			  cstat = c;
+		 }
+		 
+		 public VarDecs getV(){
+		     return vdecs;
+		 }
+		 
+		 public CompStatement getC(){
+		     return cstat;
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+		 
+		 public String toString()
+       {
+	        return vdecs.toString() + cstat.toString();
+       }
 	}
 	
 	
@@ -259,10 +295,12 @@
          return number;
       }
     
+      /*
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
-      }    
+          visitor.visit(this);
+      }
+		*/    
    }
 
    class RealNum extends Literal
@@ -279,19 +317,21 @@
          return number;
       }
     
+      /*
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
-      }    
+          visitor.visit(this);
+      }
+		*/    
    }
 
    class Identifier extends Expression
    {
       private String word;
     
-      public Identifier(FlairToken w)
+      public Identifier(String w)
       {
-         word = (String)w.getValue();
+         word = w;
       }
     
       public String toString()
@@ -299,10 +339,12 @@
          return word;
       }
     
+      /*
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
-      }    
+          visitor.visit(this);
+      }
+		*/    
    }
 
 
@@ -321,10 +363,12 @@
          return "Type = " + selection;
       }
     
+      /*
       public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
+          visitor.visit(this);
       }
+		*/
     
    }
 	
@@ -349,25 +393,51 @@
 		     return theType;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
+		 /*
+      public void allowVisit(FlairVisitor visitor)
       {
-         visitor.visit(this);
+          visitor.visit(this);
       }
+		*/
 		 
 		 
 	}
 	
 	class Parameters extends FlairAbstractSyntaxTree
 	{
-	    private ArrayList<Parameter> parameters;
+	    private ArrayList<Parameter> params = new ArrayList<Parameter>();
+		 
+		 public Parameters(ArrayList<Parameter> paramss){
+		     for(int i=0; i<paramss.size(); i++){
+		         params.add((Parameter)paramss.get(i));
+			  }
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+
+       public String toString()
+       {
+		     String theParams = "";
+		     for(int z = 0; z<params.size(); z++){
+			     theParams = theParams + params.get(z) + "\n";
+			  }
+           return theParams;
+       }
 	}
 	
 	class Statement extends FlairAbstractSyntaxTree
    {
-     public void allowVisit(FlairVisitor visitor)
-     {
-       visitor.visit(this);
-     }
+     /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
      public String toString()
      {
@@ -376,7 +446,30 @@
    }
 	
 	class Statements extends FlairAbstractSyntaxTree{
-	
+	    private ArrayList<Statement> sss = new ArrayList<Statement>();
+		 
+		 public Statements(ArrayList<Statement> ssss){
+		     for(int i=0; i<ssss.size(); i++){
+		         sss.add((Statement)ssss.get(i));
+			  }
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+
+       public String toString()
+       {
+		     String theStats = "";
+		     for(int q = 0; q<sss.size(); q++){
+			     theStats = theStats + sss.get(q) + "\n";
+			  }
+           return theStats;
+       }
+		 
 	}
 	
 	class AssignStatement extends Statement{
@@ -392,10 +485,12 @@
 		     return id;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -415,14 +510,16 @@
 			  stat2=s2;
 		 }
 		 
-		 public Identifier getComp(){
+		 public Comparison getComp(){
 		     return comp;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -439,14 +536,16 @@
 			  stat=s;
 		 }
 		 
-		 public Identifier getComp(){
+		 public Comparison getComp(){
 		     return comp;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -461,10 +560,12 @@
 		     exp = e;
 		 }
 		 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -475,14 +576,16 @@
 	class CompStatement extends Statement{
 	    private Statements stats;
 		 
-		 public WhileStatement(Statements s){
+		 public CompStatement(Statements s){
 			  stats=s;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -493,14 +596,16 @@
 	class PrintStatement extends Statement{
 	    private Expression exp;
 		 
-		 public WhileStatement(Expression e){
+		 public PrintStatement(Expression e){
 		     exp=e;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -509,20 +614,22 @@
 	}
 	
 	class Expression extends FlairAbstractSyntaxTree{
-	
+	   
 	}
 	
-	class NegateExp extends Expression{
+	class NegExp extends Expression{
 	    private Expression exp;
 		 
-		 public NegateExp(Expression e){
+		 public NegExp(Expression e){
 		     exp = e;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -534,15 +641,17 @@
 	    private Expression exp1;
 		 private Expression exp2;
 		 
-		 public NegateExp(Expression e1, Expression e2){
+		 public AddExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -555,15 +664,17 @@
 	    private Expression exp1;
 		 private Expression exp2;
 		 
-		 public NegateExp(Expression e1, Expression e2){
+		 public SubExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -575,15 +686,17 @@
 	    private Expression exp1;
 		 private Expression exp2;
 		 
-		 public NegateExp(Expression e1, Expression e2){
+		 public MultExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -595,15 +708,17 @@
 	    private Expression exp1;
 		 private Expression exp2;
 		 
-		 public NegateExp(Expression e1, Expression e2){
+		 public DivExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -613,17 +728,19 @@
 	
 	class FuncCall extends Expression{
 	    private Identifier id;
-		 private Expression args;
+		 private Arguments args;
 		 
-		 public NegateExp(Identifier i, Expression e){
+		 public FuncCall(Identifier i, Arguments a){
 		     id = i;
-			  args = e;
+			  args = a;
 		 }
 	    
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -632,7 +749,29 @@
 	}
 	
 	class Arguments extends FlairAbstractSyntaxTree{
-	
+	    private ArrayList<Expression> exps = new ArrayList<Expression>();
+		 
+		 public Arguments(ArrayList<Expression> es){
+		     for(int i=0; i<es.size(); i++){
+		         exps.add((Expression)es.get(i));
+			  }
+		 }
+		 
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
+
+       public String toString()
+       {
+		     String theExps = "";
+		     for(int z = 0; z<exps.size(); z++){
+			     theExps = theExps + exps.get(z) + "\n";
+			  }
+           return theExps;
+       }
 	}
 	
 	class Comparison extends FlairAbstractSyntaxTree{
@@ -646,10 +785,12 @@
 			  exp2 = e2;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
@@ -665,10 +806,12 @@
 		     op = o;
 		 }
 		 
-		 public void allowVisit(FlairVisitor visitor)
-       {
-           visitor.visit(this);
-       }
+		 /*
+      public void allowVisit(FlairVisitor visitor)
+      {
+          visitor.visit(this);
+      }
+		*/
 
        public String toString()
        {
