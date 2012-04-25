@@ -54,8 +54,8 @@
     
       public String toString()
       {
-         return "program\n" + name.toString() + "(" + parameters.toString() + ");" +
-                decs.toString() + cstat.toString() + ".";
+         return "\n\n\nprogram\n" + "\t" + "name(" + name.toString() + ")\n\tparameters(" + parameters.toString() + ")" + "\n\t" +
+                decs.toString() + "\n\t" + cstat.toString();
       }
    }
 
@@ -95,6 +95,10 @@
 			  }
 		 }
 		 
+		 public VarDecs(){
+		 
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -120,6 +124,10 @@
 		     for(int i=0; i<fds.size(); i++){
 		         functions.add((FuncDec)fds.get(i));
 			  }
+		 }
+		 
+		 public FuncDecs(){
+		 
 		 }
 		 
 		 /*
@@ -413,6 +421,10 @@
 			  }
 		 }
 		 
+		 public Parameters(){
+		 
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -589,7 +601,7 @@
 
        public String toString()
        {
-           return "begin " + stats + " end";
+           return "begin\n" + stats + "\nend";
        }
 	}
 	
