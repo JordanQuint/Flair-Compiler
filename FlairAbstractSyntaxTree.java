@@ -81,7 +81,7 @@
          
       public String toString()
       {
-		    return vdecs.toString() + fdecs.toString();
+		    return "Var Decs: " + vdecs.toString() + "\tFunc Decs: " + fdecs.toString();
       }
    }
 	
@@ -110,7 +110,7 @@
        {
 		     String theVars = "";
 		     for(int z = 0; z<variables.size(); z++){
-			     theVars = theVars + variables.get(z) + "\n";
+			     theVars = theVars + variables.get(z);
 			  }
            return theVars;
        }
@@ -344,7 +344,7 @@
     
       public String toString()
       {
-         return word;
+         return "Variable " + word;
       }
     
       /*
@@ -506,7 +506,7 @@
 
        public String toString()
        {
-           return id + " = " + exp;
+           return id + " a= " + exp;
        }
 		 
 	}
