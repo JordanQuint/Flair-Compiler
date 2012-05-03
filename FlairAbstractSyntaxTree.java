@@ -37,11 +37,11 @@
 		    return parameters;
 		}
 		
-		public Declarations declarations(){
+		public Declarations decs(){
 		    return decs;
 		}
 		
-		public CompStatement compStatement(){
+		public CompStatement cstat(){
 		    return cstat;
 		}
     
@@ -54,8 +54,8 @@
     
       public String toString()
       {
-         return "\n\n\nprogram\n" + "\t" + "name(" + name.toString() + ")\n\tparameters(" + parameters.toString() + ")" + "\n\t" +
-                decs.toString() + "\n\t" + cstat.toString();
+         return "\n\n\nprogram\n" + "name(" + name.toString() + ")\nparameters(" + parameters.toString() + ")" + "\n" +
+                decs.toString() + "\n" + cstat.toString();
       }
    }
 
@@ -71,6 +71,14 @@
 	  	 vdecs = v;
        fdecs = f;
      }
+	  
+	  public VarDecs vdecs(){
+	    return vdecs;
+	  }
+	  
+	  public FuncDecs fdecs(){
+	    return fdecs;
+	  }
      
       /*
       public void allowVisit(FlairVisitor visitor)
@@ -81,7 +89,7 @@
          
       public String toString()
       {
-		    return "Var Decs: " + vdecs.toString() + "\tFunc Decs: " + fdecs.toString();
+		    return "Var Decs: " + vdecs.toString() + "Func Decs: " + fdecs.toString();
       }
    }
 	
@@ -97,6 +105,10 @@
 		 
 		 public VarDecs(){
 		 
+		 }
+		 
+		 public ArrayList<VarDec> variables(){
+		     return variables;
 		 }
 		 
 		 /*
@@ -130,6 +142,10 @@
 		 
 		 }
 		 
+		 public ArrayList<FuncDec> functions(){
+		     return functions;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -159,11 +175,11 @@
        type = t;
      }
 	  
-	  public Identifier name(){
+	  public Identifier identifier(){
 	      return identifier;
 	  }
 	  
-	  public Type theType(){
+	  public Type type(){
 	      return type;
 	  }
      
@@ -209,7 +225,7 @@
     
      public String toString()
      {
-	    return fh.toString() + fb.toString();
+	    return fh.toString() + "\n" + fb.toString();
      }
    }
 	
@@ -260,11 +276,11 @@
 			  cstat = c;
 		 }
 		 
-		 public VarDecs getV(){
+		 public VarDecs vdecs(){
 		     return vdecs;
 		 }
 		 
-		 public CompStatement getC(){
+		 public CompStatement cstat(){
 		     return cstat;
 		 }
 		 
@@ -302,6 +318,10 @@
       {
          return number;
       }
+		
+		public String number(){
+		    return number;
+		}
     
       /*
       public void allowVisit(FlairVisitor visitor)
@@ -324,6 +344,10 @@
       {
          return number;
       }
+		
+		public String number(){
+		    return number;
+		}
     
       /*
       public void allowVisit(FlairVisitor visitor)
@@ -344,8 +368,12 @@
     
       public String toString()
       {
-         return "Variable " + word;
+         return word;
       }
+		
+		public String word(){
+		    return word;
+		}
     
       /*
       public void allowVisit(FlairVisitor visitor)
@@ -370,6 +398,10 @@
       {
          return "Type = " + selection;
       }
+		
+		public String selection(){
+		    return selection;
+		}
     
       /*
       public void allowVisit(FlairVisitor visitor)
@@ -391,12 +423,12 @@
 			  theType = t;
 		 }
 		 
-		 public Identifier getID()
+		 public Identifier id()
 		 {
 		     return id;
 		 }
 		 
-		 public Type getTheType()
+		 public Type theType()
 		 {
 		     return theType;
 		 }
@@ -407,6 +439,10 @@
           visitor.visit(this);
       }
 		*/
+		public String toString()
+      {
+         return "Param = " + id.toString() + theType.toString();
+      }
 		 
 		 
 	}
@@ -425,6 +461,10 @@
 		 
 		 }
 		 
+		 public ArrayList<Parameter> params(){
+		     return params;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -436,7 +476,7 @@
        {
 		     String theParams = "";
 		     for(int z = 0; z<params.size(); z++){
-			     theParams = theParams + params.get(z) + "\n";
+			     theParams = theParams + params.get(z);
 			  }
            return theParams;
        }
@@ -466,6 +506,10 @@
 			  }
 		 }
 		 
+		 public ArrayList<Statement> sss(){
+		     return sss;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -493,8 +537,12 @@
 			  exp=e;
 		 }
 		 
-		 public Identifier getID(){
+		 public Identifier id(){
 		     return id;
+		 }
+		 
+		 public Expression exp(){
+		     return exp;
 		 }
 		 
 		 /*
@@ -506,7 +554,7 @@
 
        public String toString()
        {
-           return id + " a= " + exp;
+           return id + " = " + exp;
        }
 		 
 	}
@@ -522,8 +570,16 @@
 			  stat2=s2;
 		 }
 		 
-		 public Comparison getComp(){
+		 public Comparison comp(){
 		     return comp;
+		 }
+		 
+		 public Statement stat1(){
+		     return stat1;
+		 }
+		 
+		 public Statement stat2(){
+		     return stat2;
 		 }
 		 
 		 /*
@@ -548,8 +604,12 @@
 			  stat=s;
 		 }
 		 
-		 public Comparison getComp(){
+		 public Comparison comp(){
 		     return comp;
+		 }
+		 
+		 public Statement stat(){
+		     return stat;
 		 }
 		 
 		 /*
@@ -571,7 +631,11 @@
 		 public ReturnStatement(Expression e){
 		     exp = e;
 		 }
-		 		 
+		 
+		 public Expression exp(){
+		     return exp;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -592,6 +656,10 @@
 			  stats=s;
 		 }
 		 
+		 public Statements stats(){
+		     return stats;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -610,6 +678,10 @@
 		 
 		 public PrintStatement(Expression e){
 		     exp=e;
+		 }
+		 
+		 public Expression exp(){
+		     return exp;
 		 }
 		 
 		 /*
@@ -635,6 +707,10 @@
 		 public NegExp(Expression e){
 		     exp = e;
 		 }
+		 
+		 public Expression exp(){
+		     return exp;
+		 }
 	    
 		 /*
       public void allowVisit(FlairVisitor visitor)
@@ -656,6 +732,14 @@
 		 public AddExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
+		 }
+		 
+		 public Expression exp1(){
+		     return exp1;
+		 }
+		 
+		 public Expression exp2(){
+		     return exp2;
 		 }
 	    
 		 /*
@@ -680,6 +764,14 @@
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
+		 
+		 public Expression exp1(){
+		     return exp1;
+		 }
+		 
+		 public Expression exp2(){
+		     return exp2;
+		 }
 	    
 		 /*
       public void allowVisit(FlairVisitor visitor)
@@ -701,6 +793,14 @@
 		 public MultExp(Expression e1, Expression e2){
 		     exp1 = e1;
 			  exp2 = e2;
+		 }
+		 
+		 public Expression exp1(){
+		     return exp1;
+		 }
+		 
+		 public Expression exp2(){
+		     return exp2;
 		 }
 	    
 		 /*
@@ -724,6 +824,14 @@
 		     exp1 = e1;
 			  exp2 = e2;
 		 }
+		 
+		 public Expression exp1(){
+		     return exp1;
+		 }
+		 
+		 public Expression exp2(){
+		     return exp2;
+		 }
 	    
 		 /*
       public void allowVisit(FlairVisitor visitor)
@@ -746,6 +854,14 @@
 		     id = i;
 			  args = a;
 		 }
+		 
+		 public Identifier id(){
+		     return id;
+		 }
+		 
+		 public Arguments args(){
+		     return args;
+		 }
 	    
 		 /*
       public void allowVisit(FlairVisitor visitor)
@@ -756,7 +872,7 @@
 
        public String toString()
        {
-           return id + " /n " + args;
+           return id + " 6564 " + args;
        }
 	}
 	
@@ -767,6 +883,14 @@
 		     for(int i=0; i<es.size(); i++){
 		         exps.add((Expression)es.get(i));
 			  }
+		 }
+		 
+		 public Arguments(){
+		 
+		 }
+		 
+		 public ArrayList<Expression> exps(){
+		     return exps;
 		 }
 		 
 		 /*
@@ -797,6 +921,18 @@
 			  exp2 = e2;
 		 }
 		 
+		 public Expression exp1(){
+		     return exp1;
+		 }
+		 
+		 public CompareOp op(){
+		     return op;
+		 }
+		 
+		 public Expression exp2(){
+		     return exp2;
+		 }
+		 
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -817,6 +953,11 @@
 		 public CompareOp(String o){
 		     op = o;
 		 }
+		 
+		 public String op()
+       {
+           return op;
+       }
 		 
 		 /*
       public void allowVisit(FlairVisitor visitor)

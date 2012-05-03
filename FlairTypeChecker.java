@@ -9,45 +9,54 @@ import java.io.*;
 
 public class FlairTypeChecker{
 
-    private FlairSymbolTable table;
+    private FlairParser fp;
 	 
-	 public FlairTypeChecker(FlairSymbolTable theTable){
-	     table = theTable;
+	 public FlairTypeChecker(FlairParser yo/*FlairSymbolTable theTable*/){
+	     fp=yo;//table = theTable;
+		  this.checkProgram((Program)fp.parse());
+	 }
+	 
+	 public static void main(String[] args){
+	     FlairParser parse = new FlairParser(args[0]);
+		  FlairTypeChecker hi = new FlairTypeChecker(parse);
+		  
 	 }
 	 
 	 public void checkProgram(Program p){
 	     checkFunctionNames(p);
-		  checkFunctionReturns(p);
+		  //checkFunctionReturns(p);
 		  illegalReturnStatements(p);
-		  argumentCheck(p);
+		  //argumentCheck(p);
 	 }
 	 
 	 public void checkFunctionNames(Program p){
-	     ArrayList<FuncDecs> functions = p.getFuncDecs();
+	     ArrayList<FuncDec> functions = p.decs().fdecs().functions();
 		  for(int i=0;i<functions.size();i++){
 		      //checks for user print function
-		      if(functions.get(i).getID().equals("print"){
+		      if(functions.get(i).head().getID().word().equals("print")){
 				    System.out.println("User-defined print function");
 					 System.exit(0);
 				}
 				
 				//checks for duplicate function names
 				int same=0;
-				for(int j=0;j<functions.size(),j++){
-				    if(functions.get(i).getID().equals(functions.get(j).getID())){
+				for(int j=0;j<functions.size();j++){
+				    if(functions.get(i).head().getID().word().equals(functions.get(j).head().getID().word())){
 					     same = same + 1;
 					 }
 				}
-				
+
 				if(same>1){
 				    System.out.println("Some functions share the same name");
 					 System.exit(0);
 				}
 				
 		  }
+		  
+		  System.out.println("Successful 1");
 	 
 	 }
-	 
+	 /*
 	 public void checkFunctionReturns(Program p){
 	     if(s.instanceOf(PrintStatement)){
 		  
@@ -72,19 +81,21 @@ public class FlairTypeChecker{
 		  else if(s.instanceOf(CompoundStatement)){
 		  
 		  }
-	 }
+	 }*/
 	 
 	 public void illegalReturnStatements(Program p){
-	     CompStatement pcstat = p.compStatement();
-		  ArrayList<Statement> ps = pcstat.statements();
+	     CompStatement pcstat = p.cstat();
+		  ArrayList<Statement> ps = pcstat.stats().sss();
 		  for(int i=0; i<ps.size(); i++){
+		      System.out.println(ps.get(i).getClass());
 		      if(ps.get(i) instanceof ReturnStatement){
 				    System.out.println("Return statement must be in a function");
 					 System.exit(0);
 				}
 		  }
+		  System.out.println("Successful 3");
 	 }
-	 
+	 /*
 	 public void argumentCheck(Program p){
 	     CompStatement pcstat = p.compStatement();
 		  ArrayList<Statement> ps = pcstat.statements();
@@ -114,5 +125,5 @@ public class FlairTypeChecker{
 	 public void checkFunction(Expression e){
 	 
 	 }
-	 
+	 */
 }
