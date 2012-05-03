@@ -1,0 +1,23 @@
+program HelloWorld(hi : integer);
+var b : real;
+    c : integer;
+    a : real;
+    sdsdfsdf : real;
+function test(hi : integer, hi : integer): real
+begin
+    c := 30;
+end;
+function yo(hi : integer, yo : real): real
+begin
+    c := 30;
+    a := 22 * 34
+end;
+function hi(hi : integer, yo : real): real
+begin
+    c := 30;
+    a := 22 * 34
+end;
+begin
+    c := 30;
+    {return 1}
+end.
