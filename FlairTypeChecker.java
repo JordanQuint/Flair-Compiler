@@ -13,13 +13,13 @@ public class FlairTypeChecker{
 	 
 	 public FlairTypeChecker(FlairParser yo/*FlairSymbolTable theTable*/){
 	     fp=yo;//table = theTable;
-		  this.checkProgram((Program)fp.parse());
+		  Program ft = (Program)fp.parse();
+		  this.checkProgram((Program)ft);
 	 }
 	 
 	 public static void main(String[] args){
 	     FlairParser parse = new FlairParser(args[0]);
 		  FlairTypeChecker hi = new FlairTypeChecker(parse);
-		  
 	 }
 	 
 	 public void checkProgram(Program p){
@@ -56,32 +56,28 @@ public class FlairTypeChecker{
 		  System.out.println("Successful 1");
 	 
 	 }
-	 /*
+
 	 public void checkFunctionReturns(Program p){
-	     if(s.instanceOf(PrintStatement)){
-		  
+	     ArrayList<FuncDec> functions = p.decs().fdecs().functions();
+	     for(int i=0; i<functions.size(); i++){
+		      if(!this.checkFunction(functions.get(i).body())){
+				    System.out.println("Some function doesn't have a return statement");
+					 System.exit(0);
+				}
 		  }
-		  
-		  else if(s.instanceOf(AssignStatement)){
-		  
+	 }
+	 
+	 public boolean checkFunction(FuncBody h){
+		  Statement hs = h.cstat().stats();
+		  private ArrayList<Statement> hss = hs.sss();
+		  int stop = 0;
+		  while(stop==0){
+		      for(int i=0; i<hss.size(); i++){
+				    if(hss.get(
+				}
 		  }
-		  
-		  else if(s.instanceOf(IfStatement)){
-		  
-		  }
-		  
-		  else if(s.instanceOf(WhileStatement)){
-		  
-		  }
-		  
-		  else if(s.instanceOf(ReturnStatement)){
-		  
-		  }
-		  
-		  else if(s.instanceOf(CompoundStatement)){
-		  
-		  }
-	 }*/
+		  return false;
+	 }
 	 
 	 public void illegalReturnStatements(Program p){
 	     CompStatement pcstat = p.cstat();
@@ -95,7 +91,7 @@ public class FlairTypeChecker{
 		  }
 		  System.out.println("Successful 3");
 	 }
-	 /*
+	 
 	 public void argumentCheck(Program p){
 	     CompStatement pcstat = p.compStatement();
 		  ArrayList<Statement> ps = pcstat.statements();
@@ -117,7 +113,7 @@ public class FlairTypeChecker{
 		  }
 		  
 	 }
-	 
+	 /*
 	 public void checkArguments(Expression e){
 	 
 	 }

@@ -484,6 +484,9 @@
 	
 	class Statement extends FlairAbstractSyntaxTree
    {
+	   public Statement(){
+		
+		}
      /*
       public void allowVisit(FlairVisitor visitor)
       {
