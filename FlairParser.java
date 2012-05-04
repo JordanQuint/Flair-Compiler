@@ -124,7 +124,7 @@
 				count = count +1;
          }
         
-         return (FlairAbstractSyntaxTree) semanticStack.pop();  
+         return (Program) semanticStack.pop();  
       }
     
       private void chooseAction(String action)
@@ -172,14 +172,21 @@
 			else if(action.equals("makeFuncDecs"))
          {
 			   ArrayList<FuncDec> fas = new ArrayList<FuncDec>();
+				
 			   while(semanticStack.peek() instanceof FuncDec){
 				   fas.add((FuncDec) semanticStack.pop());
 				}
+				
 				if(fas.size() == 0){
 				   semanticStack.push(new FuncDecs());
 				}
+				
 				else if(fas.size() > 0){
-            semanticStack.push(new FuncDecs(fas));}
+				    ArrayList<FuncDec> fasu = new ArrayList<FuncDec>();
+					 for(int v=fas.size()-1;v>-1;v--){
+					     fasu.add(fas.get(v));
+					 }
+                semanticStack.push(new FuncDecs(fasu));}
          }
          else if(action.equals("makeVarDec")){
 			   Type vdt = (Type) semanticStack.pop();
@@ -196,7 +203,12 @@
 				   semanticStack.push(new VarDecs());
 				}
 				else if(vas.size() > 0){
-            semanticStack.push(new VarDecs(vas));}
+				    ArrayList<VarDec> vasu = new ArrayList<VarDec>();
+					 for(int b=vas.size()-1;b>-1;b--){
+					     vasu.add(vas.get(b));
+					 }
+                semanticStack.push(new VarDecs(vasu));
+				}
          }
 			else if(action.equals("makeDecs")){
 			   FuncDecs fdq = new FuncDecs();
@@ -230,7 +242,12 @@
 				   semanticStack.push(new Parameters());
 				}
 				else if(ps.size() > 0){
-            semanticStack.push(new Parameters(ps));}
+				    ArrayList<Parameter> psu = new ArrayList<Parameter>();
+					 for(int n=ps.size()-1;n>-1;n--){
+					     psu.add(ps.get(n));
+					 }
+                semanticStack.push(new Parameters(psu));
+				}
          }
          else if(action.equals("makeParameter"))
          {
@@ -244,7 +261,16 @@
 			   while(semanticStack.peek() instanceof Statement){
 				   sss.add((Statement) semanticStack.pop());
 				}
+				if(sss.size() >1){
+				    ArrayList<Statement> sasu = new ArrayList<Statement>();
+					 for(int y=sss.size()-1;y>-1;y--){
+					     sasu.add(sss.get(y));}
+					 
+				semanticStack.push(new Statements(sasu));}
+				
+				else{
 				semanticStack.push(new Statements(sss));
+				}
          }
 			//else if(action.equals("makeStatement"))
          //{
@@ -280,8 +306,9 @@
             semanticStack.push(new CompStatement(csss));
          }
 			else if(action.equals("makePrintStat")){
-			   Expression pse = (Expression) semanticStack.pop();
-            semanticStack.push(new PrintStatement(pse));
+			   System.out.println("LOOKATIT  :  " + semanticStack.peek() + "    " + semanticStack.peek().getClass());
+			   Arguments pa2 = (Arguments) semanticStack.pop();
+            semanticStack.push(new PrintStatement(pa2));
          }
          //else if(action.equals("makeExp"))
          //{
@@ -326,7 +353,11 @@
 				   semanticStack.push(new Arguments());
 				}
 				else if(as.size() > 0){
-               semanticStack.push(new Arguments(as));
+				   ArrayList<Expression> asu = new ArrayList<Expression>();
+					 for(int m=as.size()-1;m>-1;m--){
+					     asu.add(as.get(m));
+					 }
+               semanticStack.push(new Arguments(asu));
 				}
          }
 			else if(action.equals("makeComp"))
@@ -483,13 +514,19 @@
                
                {new String[] {"STATEMENT"}, new String[] {"ASSIGNSTAT", "makeAssignStat"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"COMPS", "makeCompStat"}, new String[] {"E"}, new String[] {"IFSTAT", "makeIfStat"}, new String[] {"E"}, new String[] {"E"}, new String[] {"WHILESTAT", "makeWhileStat"}, new String[] {"E"},
-                  new String[] {"E"}, new String[] {"RETURNSTAT", "makeReturnStat"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"PRINTSTAT", "makePrintStat"}, new String[] {"RETURNSTAT", "makeReturnStat"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
                
                {new String[] {"ASSIGNSTAT"}, new String[] {"identifier", "makeID", ":=", "EXPRESSION"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
+					
+					{new String[] {"PRINTSTAT"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"print", "(", "ARGS", "makeArgs", ")"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
                
@@ -541,7 +578,7 @@
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"*", "TERM", "makeMultExp"}, new String[] {"/", "TERM", "makeDivExp"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {""}},
                
-               {new String[] {"FACTOR"}, new String[] {"identifier", "makeID", "FACTOR'"}, new String[] {"LITERAL"}, new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+               {new String[] {"FACTOR"}, new String[] {"identifier", "FACTOR'"}, new String[] {"LITERAL"}, new String[] {"LITERAL"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
@@ -551,19 +588,19 @@
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"(", "ARGS", ")", "makeFuncCall"}, new String[] {"E"}, new String[] {""}},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"makeID", "(", "ARGS", "makeArgs", ")", "makeFuncCall"}, new String[] {"E"}, new String[] {"makeID"}},
                
-               {new String[] {"FUNCCALL"}, new String[] {"identifier", "makeID", "(", "ARGS", ")", "makeFuncCall"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+               {new String[] {"FUNCCALL"}, new String[] {"identifier", "makeID", "(", "ARGS", "makeArgs", ")", "makeFuncCall"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-                  new String[] {"print", "(", "ARGS", "makeArgs", ")", "makePrintStat"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}},
                
-               {new String[] {"ARGS"}, new String[] {"ARGLIST", "makeArgs"}, new String[] {"ARGLIST", "makeArgs"}, new String[] {"ARGLIST", "makeArgs"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+               {new String[] {"ARGS"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-                  new String[] {"E"}, new String[] {"E"}, new String[] {"ARGLIST", "makeArgs"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
-                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"ARGLIST", "makeArgs"}, new String[] {"E"}, new String[] {""}},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
+                  new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"ARGLIST"}, new String[] {"E"}, new String[] {""}},
                
                {new String[] {"ARGLIST"}, new String[] {"EXPRESSION", "ARGLIST'"}, new String[] {"EXPRESSION", "ARGLIST'"}, new String[] {"EXPRESSION", "ARGLIST'"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},
                   new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"}, new String[] {"E"},

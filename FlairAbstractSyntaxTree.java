@@ -674,16 +674,16 @@
 	}
 	
 	class PrintStatement extends Statement{
-	    private Expression exp;
+		 private Arguments args;
 		 
-		 public PrintStatement(Expression e){
-		     exp=e;
+		 public PrintStatement(Arguments a){
+			  args = a;
 		 }
 		 
-		 public Expression exp(){
-		     return exp;
+		 public Arguments args(){
+		     return args;
 		 }
-		 
+	    
 		 /*
       public void allowVisit(FlairVisitor visitor)
       {
@@ -693,7 +693,7 @@
 
        public String toString()
        {
-           return "return " + exp;
+           return "print " + args.toString();
        }
 	}
 	
@@ -902,7 +902,7 @@
 
        public String toString()
        {
-		     String theExps = "";
+		     String theExps = "ags";
 		     for(int z = 0; z<exps.size(); z++){
 			     theExps = theExps + exps.get(z) + "\n";
 			  }

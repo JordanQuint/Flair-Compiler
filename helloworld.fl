@@ -18,6 +18,5 @@ begin
     a := 22 * 34
 end;
 begin
-    c := 30;
-    {return 1}
+    print(1,2)
 end.
