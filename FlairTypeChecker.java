@@ -56,7 +56,7 @@ public class FlairTypeChecker{
 		  System.out.println("Successful 1");
 	 
 	 }
-
+    /*
 	 public void checkFunctionReturns(Program p){
 	     ArrayList<FuncDec> functions = p.decs().fdecs().functions();
 	     for(int i=0; i<functions.size(); i++){
@@ -68,17 +68,17 @@ public class FlairTypeChecker{
 	 }
 	 
 	 public boolean checkFunction(FuncBody h){
-		  Statement hs = h.cstat().stats();
-		  private ArrayList<Statement> hss = hs.sss();
+		  Statements hs = h.cstat().stats();
+		  ArrayList<Statement> hss = hs.sss();
 		  int stop = 0;
 		  while(stop==0){
-		      for(int i=0; i<hss.size(); i++){
-				    if(hss.get(
-				}
+		      //for(int i=0; i<hss.size(); i++){
+				    //if(hss.get(
+				//}
 		  }
 		  return false;
 	 }
-	 
+	 */
 	 public void illegalReturnStatements(Program p){
 	     CompStatement pcstat = p.cstat();
 		  ArrayList<Statement> ps = pcstat.stats().sss();
@@ -91,7 +91,7 @@ public class FlairTypeChecker{
 		  }
 		  System.out.println("Successful 3");
 	 }
-	 
+	 /*
 	 public void argumentCheck(Program p){
 	     CompStatement pcstat = p.compStatement();
 		  ArrayList<Statement> ps = pcstat.statements();
@@ -113,7 +113,7 @@ public class FlairTypeChecker{
 		  }
 		  
 	 }
-	 /*
+	 
 	 public void checkArguments(Expression e){
 	 
 	 }
